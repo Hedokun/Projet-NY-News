@@ -1,25 +1,14 @@
 import os
-import csv
 import articles_functions
-import pandas as pd
+import books_functions
 
-def run():
-    if os.path.exists("03_2023_nyt.csv"):
-        df = pd.read_csv("03_2023_nyt.csv")
-
-    else:
-        response = articles_functions.get_api_archive(2023, 3)
-        articles = articles_functions.get_response(response)
-        df = articles_functions.parse_response(articles)
-        df.to_csv("03_2023_nyt.csv",index= False, header=True)
-
-
-    df['pub_date'] = df['pub_date'].apply(lambda x: x[0:10])
-
-    df_by_key = articles_functions.order_by_key(df)
-    df_finale = articles_functions.create_df_keys(df_by_key)
-    return df_finale
-
+def create_bdd():
+    books_functions.create_tab_list_names()
+    books_functions.create_tab_books()
+    articles_functions.create_tab_article() #stop after 1 or 2 "response ok"
+    #si l'algo se stop, une boucle de create_tab_books s'est arreté, verifier alors si une table est apparu dans les bdd
+    #si oui alors exceuter juste create_tab_article()
 
 if __name__=="__main__":
-    print(run())
+    if len(os.listdir('data_brutes/data_books')) == 0:
+        create_bdd()

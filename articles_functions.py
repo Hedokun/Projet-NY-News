@@ -2,7 +2,6 @@ import requests
 from datetime import datetime
 import pandas as pd
 from numpy import NAN
-import json
 import os
 
 def filter_by_day(list, day):
@@ -15,23 +14,24 @@ def filter_by_day(list, day):
 
 
 def get_api_archive(year, month):
-    api = f"https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key=K10EkuGSc2pswvCeoaYBZQyLQoRnTQFV"
+    """
+    récupère tous les articles d'un mois précis
+    :param year: int
+    :param month: int
+    :return: requete
+    """
+    api = f"https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key=eOrVnjKORoQABwkzbpKiRef1i8Lh4X9G"
     response = requests.get(api)
     return response
 
 
 
 def get_response(response):
-    """if os.path.exists("articles.json"):
-        print("ok")
-    else:
-        response = get_api_archive(2023,3)
-        with open("articles.json", "w") as fichier:
-            fichier.write(response.json())
-
-    with open("articles.json", "+w") as fichier:
-        articles = fichier["response"]["docs"]
-"""
+    """
+    transforme get_api_archive en dictionnaire
+    :param response:
+    :return: dict
+    """
     data= response.json()
     articles=data["response"]["docs"]
     return articles
@@ -73,6 +73,12 @@ def parse_response(response):
     return df
 
 def order_by_key(df_article):
+    """
+    transforme data brut de parse_response en mots clé par ligne
+    :param df_article: dataframe
+    :return: dataframe
+    """
+    df_article['keywords'] = df_article['keywords'].apply(lambda x: x[1:-1].split(","))
     new_df = df_article.assign(key1=df_article['keywords'].apply(lambda x: x[0] if len(x) > 0 else NAN)) \
         .assign(key2=df_article['keywords'].apply(lambda x: x[1] if len(x) > 1 else NAN)) \
         .assign(key3=df_article['keywords'].apply(lambda x: x[2] if len(x) > 2 else NAN)) \
@@ -90,16 +96,56 @@ def order_by_key(df_article):
 
 
 def create_df_keys(df_order_by_key):
+    """
+    transforme df de order_by_key en table des tendances par mots clés
+    :param df_order_by_key: dataframe
+    :return: dataframe
+    """
     df_keys = pd.wide_to_long(df_order_by_key, "key", i="id", j="keys") \
         .dropna(subset=["key"]) \
-        .groupby(['key', 'pub_date'])['Titres'].count().sort_values(ascending=False).reset_index(name='count') \
-        .pivot(index="key", columns="pub_date", values="count")
+        .groupby(['key', 'pub_date'])['Titres'].count().sort_values(ascending=False).reset_index(name='count')# \
+        #.pivot(index="key", columns="pub_date", values="count")
 
     return df_keys
 
 def create_df_categories(df_order_by_key):
+    """
+    transforme df de order_by_key en table des tendances par categories
+    :param df_order_by_key: dataframe
+    :return: dataframe
+    """
     df_categories = df_order_by_key.groupby(['categories', 'pub_date'])['id'].count().sort_values(
-        ascending=False).reset_index(name='count') \
-        .pivot(index="categories", columns="pub_date", values="count")
+        ascending=False).reset_index(name='count')# \
+        #.pivot(index="categories", columns="pub_date", values="count")
 
     return df_categories
+
+def count_keywords(df_order_by_key):
+    df_keys = pd.wide_to_long(df_order_by_key, "key", i="id", j="keys") \
+        .dropna(subset=["key"]) \
+        .groupby('key')['key'].count().sort_values(ascending=False).reset_index(name='count')
+
+    return df_keys
+
+def create_tab_article():
+    """
+    Créer table brute article à partir des archives et renvoi en csv
+    :return: /
+    """
+    from datetime import date
+    start_date = date(2018, 1, 1)
+    end_date = date(2023, 4, 1)
+    daterange = pd.date_range(start_date, end_date, freq='M').sort_values(ascending=False)
+    for date in daterange:
+        if os.path.exists("data_brutes/data_articles/" + str(date)[0:7]+ "_nyt.csv"):
+            pass
+        else:
+            try:
+                response = get_response(get_api_archive(date.year,date.month))
+                print("response ok")
+                data = parse_response(response)
+                data.to_csv("data_brutes/data_articles/" + str(date)[0:7]+"_nyt.csv", index=False,
+                            header=True, sep=";")
+            except:
+                print("stop date: " + str(date))
+                exit()
