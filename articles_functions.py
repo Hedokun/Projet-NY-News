@@ -132,20 +132,9 @@ def create_tab_article():
     Créer table brute article à partir des archives et renvoi en csv
     :return: /
     """
-    from datetime import date
-    start_date = date(2018, 1, 1)
-    end_date = date(2023, 4, 1)
-    daterange = pd.date_range(start_date, end_date, freq='M').sort_values(ascending=False)
-    for date in daterange:
-        if os.path.exists("data_brutes/data_articles/" + str(date)[0:7]+ "_nyt.csv"):
-            pass
-        else:
-            try:
-                response = get_response(get_api_archive(date.year,date.month))
-                print("response ok")
-                data = parse_response(response)
-                data.to_csv("data_brutes/data_articles/" + str(date)[0:7]+"_nyt.csv", index=False,
-                            header=True, sep=";")
-            except:
-                print("stop date: " + str(date))
-                exit()
+    response = get_response(get_api_archive(2020, 1))
+    print("response ok")
+    data = parse_response(response)
+    data.to_csv("data_brutes/data_articles/nyt.csv", index=False,
+                header=True, sep=",")
+
