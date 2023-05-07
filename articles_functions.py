@@ -127,7 +127,7 @@ def count_keywords(df_order_by_key):
 
     return df_keys
 
-def create_tab_article():
+def create_tab_article_to_csv():
     """
     Créer table brute article à partir des archives et renvoi en csv
     :return: /
@@ -137,4 +137,18 @@ def create_tab_article():
     data = parse_response(response)
     data.to_csv("data_brutes/data_articles/nyt.csv", index=False,
                 header=True, sep=",")
+
+
+def create_tab_article_to_dict():
+    """
+    Créer table brute article à partir des archives et renvoi en csv
+    :return: /
+    """
+    response = get_response(get_api_archive(2020, 1))
+    print("response ok")
+    data = parse_response(response).to_csv(index=False,header=True,sep=',')
+    return data
+
+
+
 

@@ -1,64 +1,35 @@
 from elasticsearch import Elasticsearch, helpers
 import csv
+import json
 
-Settings = {
-  "settings": {
-    "number_of_shards": 2,
-    "number_of_replicas": 2
-  },
-  "mappings": {
-    "properties": {
-      "Titres": {
-        "type": "text"
-      },
-      "doc_type": {
-        "type": "text"
-      },
-      "material_type": {
-        "type": "text"
-      },
-      "abstract": {
-        "type": "text"
-      },
-      "source": {
-        "type": "text"
-      },
-      "web_url": {
-        "type": "text"
-      },
-      "categories": {
-        "type": "text"
-      },
-      "lead_paragraph": {
-        "type": "text"
-      },
-      "pub_date": {
-        "type": "date"
-      },
-      "keywords": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
-          }
-        }
-      }
-    }
-  }
-}
+with open("resources/config_elastic_connet.json") as json_data_file:
+    config = json.load(json_data_file)
 
-def connect_elastic():
-    es = Elasticsearch(hosts="https://elastic:datascientest@localhost:9200", ca_certs="ca/ca.crt")
 
-    print(es.ping())
 
-    es.indices.create(index="article", body=Settings)
+username = config["identifiant"]["username"]
+password = config["identifiant"]["password"]
+ip = config["route_acces"]["ip"]
+port = config["route_acces"]["port"]
 
-    with open("data_brutes/data_articles/nyt.csv", encoding='utf-8') as f:
+
+def connect_elastic_server():
+    es = Elasticsearch(hosts=f"https://{username}:{password}@{ip}:{port}", ca_certs="ca/ca.crt")
+    return es
+
+
+def create_database(elasticsearch, filepath, tablename, setting):
+    elasticsearch.indices.create(index=tablename, body=setting)
+
+    with open(filepath, encoding='utf-8') as f:
         reader = csv.DictReader(f)
-        helpers.bulk(es, reader, index="article")
+        helpers.bulk(elasticsearch, reader, index=tablename)
 
 
+def create_database_json(elasticsearch, data, tablename, setting):
+    elasticsearch.indices.create(index=tablename, body=setting)
+    data = csv.DictReader(data)
+    helpers.bulk(elasticsearch, data,index=tablename)
+    print("finis")
+    #helpers.bulk(elasticsearch, data, index=tablename)
 
-connect_elastic()

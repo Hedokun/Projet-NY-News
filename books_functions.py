@@ -116,4 +116,3 @@ def create_tab_books():
                     print("stop date: "+str(date)+" categorie: "+category)
                     exit()
 
-
