@@ -24,8 +24,28 @@ es = connect_elastic_server()
 
 
 def get_count_article_range(elasticsearch, request):
+    date = []
+    count = []
+    result_request = elasticsearch.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])
+    for i in result_request['aggregations']["group_by_date"]["buckets"] :
+        print(i['key_as_string'])
+        date.append(i['key_as_string'])
+        count.append(i["doc_count"])
+    return date,count
 
-    return elasticsearch.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])
 
 
 print(get_count_article_range(es, req))
+
+
+def get_count_article_range2(elasticsearch, request,param):
+
+    date = []
+    count = []
+    result_request = elasticsearch.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])
+    for i in result_request['aggregations']["group_by_date"]["buckets"] :
+        print(i['key_as_string'])
+        date.append(i['key_as_string'])
+        count.append(i["doc_count"])
+    return date,count
+

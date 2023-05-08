@@ -13,7 +13,7 @@ def create_bdd():
     # books_functions.create_tab_books()
     create_tab_article_to_csv()
     es = connect_elastic_server()
-    create_database(es, "data_brutes/data_articles/nyt.csv" "article", mapping)
+    create_database(es, "data_brutes/data_articles/nyt.csv","article", mapping)
 
     # stop after 1 or 2 "response ok"
     # si l'algo se stop, une boucle de create_tab_books s'est arreté, verifier alors si une table est apparu dans les bdd
