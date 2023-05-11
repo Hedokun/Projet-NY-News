@@ -111,7 +111,7 @@ def create_tab_books():
                 try:
                     response = get_response(get_api_books(str(date)[0:10], category))
                     data = reponse_to_dataframe(response, str(date)[0:10], category)
-                    data.to_csv("data_brutes/data_books/"+ str(date)[0:10]+"_"+category+"_nyt.csv", index=False, header=True, sep=";")
+                    data.to_csv("data_brutes/data_books/"+ str(date)[0:10]+"_"+category+"_nyt.csv", index=False, header=True, sep=",")
                 except:
                     print("stop date: "+str(date)+" categorie: "+category)
                     exit()
