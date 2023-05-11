@@ -145,7 +145,7 @@ def create_tab_article():
                 print("response ok")
                 data = parse_response(response)
                 data.to_csv("data_brutes/data_articles/" + str(date)[0:7]+"_nyt.csv", index=False,
-                            header=True, sep=";")
+                            header=True, sep=',')
             except:
                 print("stop date: " + str(date))
                 exit()

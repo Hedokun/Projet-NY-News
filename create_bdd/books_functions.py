@@ -3,6 +3,8 @@ from datetime import date, timedelta
 import pandas as pd
 import pickle
 import os
+from pynytimes import NYTAPI
+import itertools
 
 
 def get_api_list_name():
@@ -26,6 +28,19 @@ def get_api_books(date,name):
                                       timeout=10)
 
     return response
+
+
+def get_api_books_by_author(name):
+    """
+    récupère tous les livres d'un auteur
+    :param prenom: string
+    :param nom: string
+    :return: list
+    """
+    nyt = NYTAPI("2U5DqnjNtPCugQHMyqV7RIGNG4f03mAK", parse_dates=True)
+    books_nyt = nyt.book_reviews(author=name)
+
+    return books_nyt
 
 
 def get_list_name(response):
@@ -84,13 +99,12 @@ def create_tab_list_names():
     """
     try:
         list_names = get_list_name(get_api_list_name())
-        fichier = open('data_brutes/data_books/list_names.txt', 'wb')
+        fichier = open('../data_brutes/data_books/list_names.txt', 'wb')
         pickle.dump(list_names, fichier)
     except:
         print( "l'API a un problème")
 
 def create_tab_books():
-
     """
     créer la table brute books et transforme en csv
     :return: /
@@ -101,7 +115,7 @@ def create_tab_books():
     daterange = pd.date_range(start_date, end_date, freq='W-SUN').sort_values(
         ascending=False)
 
-    fichier_list_names = open('data_brutes/data_books/list_names.txt', 'rb')
+    fichier_list_names = open('../data_brutes/data_books/list_names.txt', 'rb')
     list_names = pickle.load(fichier_list_names)
     for category in list_names:
         for date in daterange:
@@ -115,4 +129,36 @@ def create_tab_books():
                 except:
                     print("stop date: "+str(date)+" categorie: "+category)
                     exit()
+
+
+def get_author():
+
+
+    list_author=[]
+
+    from datetime import date
+    start_date = date(2013, 1, 1)
+    end_date = date(2023, 4, 1)
+    daterange = pd.date_range(start_date, end_date, freq='W-SUN').sort_values(
+        ascending=False)
+
+    fichier_list_names = open('../data_brutes/data_books/list_names.txt', 'rb')
+    list_names = pickle.load(fichier_list_names)
+    for category in list_names:
+        for date in daterange:
+            if os.path.exists("data_brutes/data_books/"+ str(date)[0:10]+"_"+category+"_nyt.csv"):
+                data=pd.read_csv("data_brutes/data_books/"+ str(date)[0:10]+"_"+category+"_nyt.csv", sep=";")
+                auteurs=data['author'].tolist()
+                for i in auteurs:
+                    a = i.split(" and ")
+                    list_author.append(a)
+
+    list_author = list(itertools.chain(*list_author))
+    list_author = list(set(list_author))
+    fichier = open('../data_brutes/data_books/list_author.txt', 'wb')
+    pickle.dump(list_author, fichier)
+
+
+
+
 
