@@ -7,10 +7,6 @@ from request_elasticsearch import get_count_article_range
 with open("resources/mapping.json") as json_data_file:
     mapping = json.load(json_data_file)
 
-
-
-
-
 es = connect_elastic_server()
 def create_bdd():
     # books_functions.create_tab_list_names()
