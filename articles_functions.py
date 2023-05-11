@@ -4,6 +4,7 @@ import pandas as pd
 from numpy import NAN
 import os
 
+
 def filter_by_day(list, day):
     result = []
     for article in list:
