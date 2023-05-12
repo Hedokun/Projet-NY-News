@@ -4,8 +4,8 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 from jupyter_dash import JupyterDash
-from connect_Elastic import  connect_elastic_server
-from request_elasticsearch import get_count_article_range2
+from request_elasticsearch import *
+
 
 app = JupyterDash(__name__)
 
@@ -19,11 +19,17 @@ app.layout = html.Div([
 
 es = connect_elastic_server()
 
+def get_all_data(elasticsearch):
+    title,url = get_last_news(elasticsearch)
+    min_time,max_time = get_time_bdd(elasticsearch)
+    keyword, count = get_top_ten_categorie(elasticsearch)
+
+
+
 def update_date(filter):
     date, count = get_count_article_range2(es, filter)
     d = {'Date': date, 'Count': count}
     df = pd.DataFrame(d)
-    print(df)
     return df
 
 
@@ -32,7 +38,10 @@ def update_date(filter):
     dash.dependencies.Output('graphique', 'figure'),
     [dash.dependencies.Input('mot-recherche', 'value')])
 def update_graph(mot_recherche):
+    if mot_recherche== None :
+        mot_recherche = "France"
     data = update_date(mot_recherche)
+
 
     # graphique avec plotly
     fig = px.line(data, x='Date', y='Count',
@@ -43,6 +52,7 @@ def update_graph(mot_recherche):
 
 def create_dashboard():
     app.run_server(mode='inline')
+    get_all_data(es)
 
 
 # lancé Dash avec Jup

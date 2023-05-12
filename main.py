@@ -1,8 +1,7 @@
-from articles_functions import create_tab_article_to_csv
+from create_bdd.articles_functions import create_tab_article
 from connect_Elastic import connect_elastic_server, create_database
 import json
 from dashboard import create_dashboard,update_graph
-from request_elasticsearch import get_count_article_range
 
 with open("resources/mapping.json") as json_data_file:
     mapping = json.load(json_data_file)
@@ -11,7 +10,7 @@ es = connect_elastic_server()
 def create_bdd():
     # books_functions.create_tab_list_names()
     # books_functions.create_tab_books()
-    create_tab_article_to_csv()
+    create_tab_article()
     try :
         create_database(es, "data_brutes/data_articles/nyt.csv","article", mapping)
     except :
