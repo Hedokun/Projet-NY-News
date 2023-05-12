@@ -1,0 +1,10 @@
+{
+  "identifiant" : {
+    "username" : "elastic",
+    "password" : "datascientest"
+  },
+  "route_acces" : {
+    "ip" : "localhost",
+    "port" : "9200"
+  }
+}
