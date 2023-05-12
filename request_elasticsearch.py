@@ -35,7 +35,7 @@ def get_count_article_range(elasticsearch, request):
 
 
 
-print(get_count_article_range(es, req))
+
 
 
 def get_count_article_range2(elasticsearch,param):

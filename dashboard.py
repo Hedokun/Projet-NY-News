@@ -60,11 +60,18 @@ dbc.NavbarSimple(
 
 
 
-es = connect_elastic_server()
+try :
+    es = connect_elastic_server()
+except :
+    es = 0
 
 def update_date(filter):
-    date, count = get_count_article_range2(es, filter)
-    d = {'Date': date, 'Count': count}
+    try :
+        date, count = get_count_article_range2(es, filter)
+        d = {'Date': date, 'Count': count}
+    except :
+        d = {'Date': "20/01/2001", 'Count': 25}
+
     df = pd.DataFrame(d)
     print(df)
     return df
@@ -78,6 +85,7 @@ def update_date(filter):
     [dash.dependencies.Input('mot-recherche', 'value')])
 def update_graph(mot_recherche):
     data = update_date(mot_recherche)
+
 
     # graphique avec plotly
     fig_keywords = px.line(data, x='Date', y='Count',
