@@ -190,11 +190,5 @@ def update_data(dash_start, dash_stop):
             merge_data(f)
             print("data merge")
 
-update_data("2022-09-12","2023-01-01")
 
-def update_database(elasticsearch, filepath, tablename, setting):
-    elasticsearch.indices.update(index=tablename, body=setting)
 
-    with open(filepath, encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        helpers.bulk(elasticsearch, reader, index=tablename)

@@ -33,3 +33,10 @@ def create_database_json(elasticsearch, data, tablename, setting):
     print("finis")
     #helpers.bulk(elasticsearch, data, index=tablename)
 
+def update_database(elasticsearch, filepath, tablename, setting):
+    elasticsearch.indices.update(index=tablename, body=setting)
+
+    with open(filepath, encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        helpers.bulk(elasticsearch, reader, index=tablename)
+
