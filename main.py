@@ -1,6 +1,6 @@
 from create_bdd import articles_functions, books_functions
 import json
-
+import os
 import pandas as pd
 
 import pandas as pd
@@ -63,7 +63,7 @@ if __name__=="__main__":
 
     # lancé Dash avec JupyterDash
     app.run_server(mode='inline')"""
-    df = pd.read_csv('data_brutes/data_articles/2023-01_nyt.csv')
+    df = pd.read_csv('data_brutes/data_articles/articles_nyt.csv')
     with open("data_kibana/resultat.json", encoding="utf8") as json_data_file:
         res = json.load(json_data_file)
 
