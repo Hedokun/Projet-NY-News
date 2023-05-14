@@ -1,4 +1,3 @@
-import csv
 import json
 import pandas as pd
 from ElasticSearch.Elasticsearch_requests import Elasticsearch

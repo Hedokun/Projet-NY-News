@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch, helpers
 import csv
 import json
 
-with open("ressources/config_elastic_connet.json") as json_data_file:
+with open("./ressources/config_elastic_connet.json") as json_data_file:
     config = json.load(json_data_file)
 
 
@@ -14,7 +14,7 @@ port = config["route_acces"]["port"]
 
 
 def connect_elastic_server():
-    es = Elasticsearch(hosts=f"https://{username}:{password}@{ip}:{port}", ca_certs="ca/ca.crt")
+    es = Elasticsearch(hosts=f"https://{username}:{password}@{ip}:{port}", ca_certs="./ressources/ca/ca.crt")
     return es
 
 

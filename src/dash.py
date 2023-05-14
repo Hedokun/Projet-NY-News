@@ -1,8 +1,8 @@
 import pandas as pd
 import plotly.express as px
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import *
+#import dash_core_components as dcc
+#import dash_html_components as html
 from jupyter_dash import JupyterDash
 
 df = pd.read_csv('data_brutes/data_articles/2023-01_nyt.csv')

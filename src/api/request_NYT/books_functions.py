@@ -99,7 +99,7 @@ def create_tab_list_names():
     """
     try:
         list_names = get_list_name(get_api_list_name())
-        fichier = open('../data_brutes/data_books/list_names.txt', 'wb')
+        fichier = open('../../data_brutes/data_books/list_names.txt', 'wb')
         pickle.dump(list_names, fichier)
     except:
         print( "l'API a un problème")
@@ -115,7 +115,7 @@ def create_tab_books():
     daterange = pd.date_range(start_date, end_date, freq='W-SUN').sort_values(
         ascending=False)
 
-    fichier_list_names = open('../data_brutes/data_books/list_names.txt', 'rb')
+    fichier_list_names = open('../../data_brutes/data_books/list_names.txt', 'rb')
     list_names = pickle.load(fichier_list_names)
     for category in list_names:
         for date in daterange:
@@ -142,7 +142,7 @@ def get_author():
     daterange = pd.date_range(start_date, end_date, freq='W-SUN').sort_values(
         ascending=False)
 
-    fichier_list_names = open('../data_brutes/data_books/list_names.txt', 'rb')
+    fichier_list_names = open('../../data_brutes/data_books/list_names.txt', 'rb')
     list_names = pickle.load(fichier_list_names)
     for category in list_names:
         for date in daterange:
