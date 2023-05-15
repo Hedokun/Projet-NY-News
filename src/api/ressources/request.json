@@ -39,35 +39,57 @@
     ]
   },
   "get_count_filter": {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "match": {
-                            "Titres": ""
-                        }
-                    }
-                ],
-                "filter": [
-                    {
-                        "range": {
-                            "pub_date": {
-                                "gte": "2020-01-01",
-                                "lte": "2020-01-25"
-                            }
-                        }
-                    }
-                ]
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "Titres": ""
             }
-        },
-        "aggs": {
-            "group_by_date": {
-                "date_histogram": {
-                    "field": "pub_date",
-                    "calendar_interval": "day",
-                    "format": "yyyy-MM-dd"
-                }
+          }
+        ],
+        "filter": [
+          {
+            "range": {
+              "pub_date": {
+                "gte": "2020-01-01",
+                "lte": "2020-01-25"
+              }
             }
+          }
+        ]
+      }
+    },
+    "aggs": {
+      "group_by_date": {
+        "date_histogram": {
+          "field": "pub_date",
+          "calendar_interval": "day",
+          "format": "yyyy-MM-dd"
         }
+      }
     }
+  },
+  "get_cat_by_day": {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "categories": ""
+            }
+          }
+        ]
+      }
+    },
+    "aggs": {
+      "group_by_date": {
+        "date_histogram": {
+          "field": "pub_date",
+          "calendar_interval": "day",
+          "format": "yyyy-MM-dd"
+        }
+      }
+    }
+  }
 }

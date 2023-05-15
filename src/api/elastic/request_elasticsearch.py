@@ -74,6 +74,20 @@ def get_top_ten_categorie():
     d = {'Keyword': keyword, "Count": count}
     return d
 
+@router.get("/get_cat_by_day/")
+def get_cat_by_day(param):
+    date = []
+    count = []
+    requests_get_cat_by_day = config["get_cat_by_day"]
+    requests_get_cat_by_day['query']["bool"]["must"][0]['match']['categories'] = param
+    result_request = es.search(index='article', body=requests_get_cat_by_day, filter_path=["aggregations"])
+    for i in result_request["aggregations"]["group_by_date"]["buckets"]:
+        date.append(i['key_as_string'])
+        count.append(i["doc_count"])
+    d = {'Date': date, 'Count': count}
+    return d
+
+
 @router.post("/date_range_picker")
 def get_date_range_picker():
 
