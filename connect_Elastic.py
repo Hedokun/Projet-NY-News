@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch, helpers
 import csv
 import json
 
-with open("resources/config_elastic_connet.json") as json_data_file:
+with open("ressources/config_elastic_connet.json") as json_data_file:
     config = json.load(json_data_file)
 
 
