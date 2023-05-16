@@ -6,7 +6,10 @@ from dashboard import create_dashboard,update_graph
 with open("resources/mapping.json") as json_data_file:
     mapping = json.load(json_data_file)
 
-es = connect_elastic_server()
+try :
+    es = connect_elastic_server()
+except :
+    es = 0
 def create_bdd():
     # books_functions.create_tab_list_names()
     # books_functions.create_tab_books()

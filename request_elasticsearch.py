@@ -23,6 +23,12 @@ def get_count_article_range(elasticsearch, request):
 def get_count_article_range2(elasticsearch, param):
     request = config["get_count_filter"]
     request['query']["bool"]["must"][0]['match']['Titres'] = param
+
+
+
+
+def get_count_article_range2(elasticsearch,param):
+    name = param
     date = []
     count = []
     result_request = elasticsearch.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])

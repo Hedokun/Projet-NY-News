@@ -5,6 +5,7 @@ from numpy import NAN
 import os
 from datetime import date
 
+
 def filter_by_day(list, day):
     result = []
     for article in list:
