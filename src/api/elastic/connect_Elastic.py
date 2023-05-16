@@ -2,20 +2,24 @@ from elasticsearch import Elasticsearch, helpers
 import csv
 import json
 
-with open("ressources/config_elastic_connet.json") as json_data_file:
+with open("./ressources/config_elastic_connet.json") as json_data_file:
     config = json.load(json_data_file)
 
-
-
-username = config["identifiant"]["username"]
-password = config["identifiant"]["password"]
+ELASTIC_PASSWORD = config["ELASTIC_PASSWORD"]
 ip = config["route_acces"]["ip"]
 port = config["route_acces"]["port"]
 
 
 def connect_elastic_server():
-    es = Elasticsearch(hosts=f"https://{username}:{password}@{ip}:{port}", ca_certs="ca/ca.crt")
+    # Found in the 'Manage Deployment' page
+    es = Elasticsearch(hosts=f"https://{ip}:{port}",
+    http_auth=("elastic", ELASTIC_PASSWORD))
     return es
+
+
+# Create the client instance
+
+
 
 
 def create_database(elasticsearch, filepath, tablename, setting):

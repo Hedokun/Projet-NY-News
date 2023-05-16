@@ -1,4 +1,4 @@
-from connect_Elastic import connect_elastic_server
+from  ElasticSearch.connect_Elastic import connect_elastic_server
 
 class Elasticsearch:
 

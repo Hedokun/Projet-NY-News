@@ -1,9 +1,17 @@
+import json
+
 import dash
 import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 from jupyter_dash import JupyterDash
+import requests
+
+
+url_api = "http://127.0.0.1:8000/"
+app = JupyterDash(__name__)
+
 from connect_Elastic import  connect_elastic_server
 from request_elasticsearch import get_count_article_range2
 import dash_bootstrap_components as dbc
@@ -148,6 +156,17 @@ app.layout = html.Div(children=[
 ])
 
 
+def get_all_data():
+    response = requests.get(url_api+f"get_time_bdd/")
+    reponse_get_time_bdd = json.loads(response.content.decode())
+
+    response = requests.get(url_api+f"get_last_news/")
+    reponse_get_last_news = json.loads(response.content.decode())
+    
+    response = requests.get(url_api+f"get_top10/")
+    reponse_get_top10 = json.loads(response.content.decode())
+
+    return reponse_get_top10,reponse_get_last_news,reponse_get_time_bdd
 
 
 try :
@@ -156,15 +175,9 @@ except :
     es = 0
 
 def update_date(filter):
-
-    try :
-        date, count = get_count_article_range2(es, filter)
-        d = {'Date': date, 'Count': count}
-    except :
-        d = {'Date': "20/01/2001", 'Count': 25}
-
-    df = pd.DataFrame(d)
-    print(df)
+    response = requests.get(url_api+f"get_count_article/?param={filter}")
+    reponse_parse = json.loads(response.content.decode())
+    df = pd.DataFrame(reponse_parse)
     return df
 
 
@@ -208,8 +221,9 @@ def update_graph(mot_recherche):
 
 
 def create_dashboard():
-    app.run_server()
+    app.run_server(mode='inline')
 
 
-
+# lancé Dash avec Jup
+create_dashboard()
 
