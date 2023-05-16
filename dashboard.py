@@ -128,10 +128,7 @@ tabs = dbc.Tabs(
     [graph_1, graph_2],
     className="mb-3"
 )
-from request_elasticsearch import *
 
-
-app = JupyterDash(__name__)
 
 # créer une mise en page
 app.layout = html.Div(children=[  
@@ -158,20 +155,6 @@ try :
 except :
     es = 0
 
-def get_all_data(elasticsearch):
-    title,url = get_last_news(elasticsearch)
-    min_time,max_time = get_time_bdd(elasticsearch)
-    keyword, count = get_top_ten_categorie(elasticsearch)
-
-
-
-def get_all_data(elasticsearch):
-    title,url = get_last_news(elasticsearch)
-    min_time,max_time = get_time_bdd(elasticsearch)
-    keyword, count = get_top_ten_categorie(elasticsearch)
-
-
-
 def update_date(filter):
 
     try :
@@ -181,6 +164,7 @@ def update_date(filter):
         d = {'Date': "20/01/2001", 'Count': 25}
 
     df = pd.DataFrame(d)
+    print(df)
     return df
 
 
@@ -205,10 +189,7 @@ def display_category(selected_category):
 def update_graph(mot_recherche):
     if mot_recherche== None :
         mot_recherche = "France"
-    if mot_recherche== None :
-        mot_recherche = "France"
     data = update_date(mot_recherche)
-
 
 
 
@@ -229,7 +210,6 @@ def update_graph(mot_recherche):
 def create_dashboard():
     app.run_server()
 
-    get_all_data(es)
 
 
 
