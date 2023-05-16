@@ -28,17 +28,13 @@ def get_count_article_range(elasticsearch, request):
     return date, count
 
 @router.get("/get_count_article/")
-def get_count_article_range2(param):
-    request = config["get_count_filter"]
-    request['query']["bool"]["must"][0]['match']['Titres'] = param
-
-
-
-
-def get_count_article_range2(elasticsearch,param):
-    name = param
+def get_count_article_range2(param,min_date,max_date):
     date = []
     count = []
+    request = config["get_count_filter"]
+    request['query']["bool"]["must"][0]['match']['Titres'] = param
+    request['query']["bool"]["filter"][0]['range']['pub_date']["gte"] = min_date
+    request['query']["bool"]["filter"][0]['range']['pub_date']["lte"] = max_date
     result_request = es.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])
     for i in result_request['aggregations']["group_by_date"]["buckets"]:
         date.append(i['key_as_string'])

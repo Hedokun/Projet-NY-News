@@ -5,18 +5,35 @@ import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
-from jupyter_dash import JupyterDash
+import dash_bootstrap_components as dbc
+from datetime import *
+import dash_table
 import requests
 
 
 url_api = "http://127.0.0.1:8000/"
-app = JupyterDash(__name__)
 
-from connect_Elastic import  connect_elastic_server
-from request_elasticsearch import get_count_article_range2
-import dash_bootstrap_components as dbc
-from datetime import date
-import dash_table
+
+def get_all_data():
+    response = requests.get(url_api + f"get_time_bdd/")
+    reponse_get_time_bdd = json.loads(response.content.decode())
+
+    response = requests.get(url_api + f"get_last_news/")
+    reponse_get_last_news = json.loads(response.content.decode())
+
+    response = requests.get(url_api + f"get_top10/")
+    reponse_get_top10 = json.loads(response.content.decode())
+
+
+    return reponse_get_top10, reponse_get_last_news, reponse_get_time_bdd
+
+reponse_get_top10, reponse_get_last_news, reponse_get_time_bdd = get_all_data()
+
+min_datetime = datetime.strptime(reponse_get_time_bdd["min_time"], "%Y-%m-%dT%H:%M:%S")
+
+max_datetime = datetime.strptime(reponse_get_time_bdd["max_time"], "%Y-%m-%dT%H:%M:%S")
+
+
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css])
@@ -29,9 +46,6 @@ style ={
     "colors" :"#FFFFF"
 }
 
-liens = ["https://www.nytimes.com/2019/12/31/us/texas-church-shooting-white-settlement.html", "https://www.nytimes.com/2019/12/31/opinion/for-profit-college-veterans.html", "https://www.nytimes.com/2019/12/31/health/e-cigarettes-flavor-ban-trump.html", "https://www.nytimes.com/2019/12/31/crosswords/daily-puzzle-2020-01-01.html", "https://www.nytimes.com/2019/12/31/pageoneplus/corrections-jan-1-2020.html", "https://www.nytimes.com/2019/12/31/todayspaper/quotation-of-the-day-ex-seal-now-pitching-products-and-president.html", "https://www.nytimes.com/interactive/2019/12/31/world/middleeast/syria-united-nations-investigation.html", "https://www.nytimes.com/2020/01/01/world/asia/hong-kong-protest.html", "https://www.nytimes.com/2019/12/31/us/kevin-spacey-lawsuit-accuser.html", "https://www.nytimes.com/2019/12/31/us/politics/trump-new-years-eve.html"]
-titre = ['Battling a Demon: Drifter Sought Help Before Texas Church Shooting', 'Protect Veterans From Fraud', 'F.D.A. Plans to Ban Most E-Cigarette Flavors but Menthol', 'It’s Green and Slimy', 'Corrections: Jan. 1, 2020', 'Quotation of the Day: Ex-SEAL Now Pitching Products and President', 'Hospitals and Schools Are Being Bombed in Syria. A U.N. Inquiry Is Limited. We Took a Deeper Look.', 'Hong Kong Protesters Return to Streets as New Year Begins', 'Kevin Spacey Accuser’s Estate Drops Sexual Assault Lawsuit', 'Dizzying Day for Trump Caps a Year Full of Them']
-categories = ['U.S.', 'Opinion', 'Health', 'Crosswords & Games', 'Corrections', 'Today’s Paper', 'World', 'Science', 'Arts', 'Business Day', 'Magazine', 'Books', 'Well', 'Travel', 'Technology', 'New York', 'Movies', 'Real Estate', 'Sports', 'Theater', 'Food', 'Style', 'Parenting', 'Briefing', 'Climate', 'Smarter Living', 'Obituaries', 'The Learning Network', 'Reader Center', 'Podcasts', 'T Magazine', 'The Upshot', 'Fashion & Style', 'Your Money', 'Neediest Cases', 'Admin', 'T Brand', 'Video', 'The Weekly', 'Education', 'Automobiles', 'Sunday Review', 'Multimedia/Photos']
 
 logo = html.Img(src="https://i0.wp.com/datascientest.com/wp-content/uploads/2020/08/new-logo.png", height="70px", 
                  className="position-absolute top-0 end-60")   
@@ -70,9 +84,9 @@ selector =dbc.Row([
                     dbc.Col(dbc.Input
                             (id='mot-recherche',placeholder="Entrez le mot à rechercher", type="text"),width=12,className="mb-2 rounded"),
                     dbc.Col(dcc.Dropdown
-                            (id='dropdown-categories', options=[{'label': category, 'value': category} for category in categories],style={'width': '100%'} , placeholder="Sélectionnez une catégorie")),
+                            (id='dropdown_categories', options=[{'label': category, 'value': category} for category in reponse_get_top10["Keyword"]],style={'width': '100%'} , placeholder="Sélectionnez une catégorie")),
                     dbc.Col(dcc.DatePickerRange
-                            (id='my-date-picker-range', min_date_allowed=date(1995, 8, 5), max_date_allowed=date(2023, 5, 11),initial_visible_month=date(2017, 8, 5), end_date=date(2017, 8, 25),className= "rounded"))
+                            (id='my_date_picker_range', min_date_allowed=min_datetime, max_date_allowed=max_datetime,initial_visible_month=min_datetime,className= "rounded"))
                     
         ],className="flex-column"),className="rounded shadow-sm p-4"),  
     ],className="p-3")
@@ -91,7 +105,7 @@ tab_Titres = dbc.Col(
                     html.Tr([
                             html.Td(html.A(t,href=lien,target="_blank",)),
                             ])
-                    for t, lien in zip(titre, liens)
+                    for t, lien in zip(reponse_get_last_news["Title"], reponse_get_last_news["Url"])
                     ]),
         ],
         bordered=True,
@@ -120,7 +134,7 @@ graph_2 = dbc.Tab(
 tableau_2 = dbc.Col(
                 html.Table([
                     html.Thead(html.Tr([html.Th("Titres")]), style={'background-color': '#f8f9fa'}),
-                    html.Tbody([html.Tr([html.Td(element)]) for element in titre])
+                    html.Tbody([html.Tr([html.Td(element)]) for element in reponse_get_last_news["Title"]])
                 ], className="table")
                 , width=4)
 
@@ -128,7 +142,7 @@ tableau_2 = dbc.Col(
 tableau_liens_2 = dbc.Col(
                 html.Table([
                     html.Thead(html.Tr([html.Th("Liens")]), style={'background-color': '#f8f9fa'}),
-                    html.Tbody([html.Tr([html.Td(html.A(href=lien, children=lien))]) for lien in liens])
+                    html.Tbody([html.Tr([html.Td(html.A(href=lien, children=lien))]) for lien in reponse_get_last_news["Url"]])
                 ], className="table")
                 , width=4)
 
@@ -156,72 +170,58 @@ app.layout = html.Div(children=[
 ])
 
 
-def get_all_data():
-    response = requests.get(url_api+f"get_time_bdd/")
-    reponse_get_time_bdd = json.loads(response.content.decode())
-
-    response = requests.get(url_api+f"get_last_news/")
-    reponse_get_last_news = json.loads(response.content.decode())
-    
-    response = requests.get(url_api+f"get_top10/")
-    reponse_get_top10 = json.loads(response.content.decode())
-
-    return reponse_get_top10,reponse_get_last_news,reponse_get_time_bdd
-
-
-try :
-    es = connect_elastic_server()
-except :
-    es = 0
-
-def update_date(filter):
-    response = requests.get(url_api+f"get_count_article/?param={filter}")
+def update_data_article(filter,min_date,max_date):
+    response = requests.get(url_api+f"get_count_article/?param={filter}&min_date={min_date}&max_date={max_date}")
     reponse_parse = json.loads(response.content.decode())
     df = pd.DataFrame(reponse_parse)
     return df
 
+def updata_data_catagories(filter):
+    response = requests.get(url_api + f"get_cat_by_day/?param={filter}")
+    response_get_cat_by_day = json.loads(response.content.decode())
+    df = pd.DataFrame(response_get_cat_by_day)
+    return df
 
-# definir une fonction de rappel pour mettre à jour le graphique en fonction du mot de recherche
-@app.callback(
-    [dash.dependencies.Output('graphique', 'figure'),
-     dash.dependencies.Output('graphique-categories', 'figure'),
-     dash.dependencies.Output('dropdown-output', 'children'),
-     dash.dependencies.Output('graphique-abstract', 'figure')],
-    [dash.dependencies.Input('mot-recherche', 'value'),
-     dash.dependencies.Input('dropdown-categories', 'value')])
 
-#update du choix de catagory
+
 def display_category(selected_category):
     if selected_category:
         return html.H3(f"Vous avez sélectionné la catégorie : {selected_category}")
     else:
         return html.H3("Sélectionnez une catégorie")
-    
 
 
-def update_graph(mot_recherche):
+# definir une fonction de rappel pour mettre à jour le graphique en fonction du mot de recherche
+@app.callback(
+    [dash.dependencies.Output('graphique-1', 'figure'),
+     dash.dependencies.Output('graphique-2', 'figure')],
+    [dash.dependencies.Input('mot-recherche', 'value'),
+     dash.dependencies.Input('dropdown_categories', 'value'),
+     dash.dependencies.Input('my_date_picker_range', 'start_date'),
+    dash.dependencies.Input('my_date_picker_range', 'end_date')])
+#update du choix de catagory
+def update_graph(mot_recherche,dropdown_categories, start_date,end_date):
     if mot_recherche== None :
         mot_recherche = "France"
-    data = update_date(mot_recherche)
-
-
-
-
+    data_article = update_data_article(mot_recherche,start_date,end_date)
+    data_categories = updata_data_catagories(dropdown_categories)
+    display_category(dropdown_categories)
     # graphique avec plotly
-    fig_keywords = px.line(data, x='Date', y='Count',
+    fig_keywords = px.line(data_article, x='Date', y='Count',
                   title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche))
-    fig_categories = px.histogram(data, x='Date', y='Count',
+    fig_categories = px.line(data_categories, x='Date', y='Count',
                   title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche),color_discrete_sequence=['green'])
-    fig_abstract = px.line(data, x='Date', y='Count',
-                  title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche),color_discrete_sequence=['red'])
+    #fig_abstract = px.line(data, x='Date', y='Count',
+                  #title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche),color_discrete_sequence=['red'])
                   
     total_occurrences = 0
 
-    return fig_keywords, fig_categories, fig_abstract
+    return fig_keywords, fig_categories #fig_abstract
 
 
 def create_dashboard():
-    app.run_server(mode='inline')
+    app.run_server()
+
 
 
 # lancé Dash avec Jup
