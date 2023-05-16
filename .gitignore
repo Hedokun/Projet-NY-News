@@ -5,3 +5,11 @@
 /resources/config_elastic_connet.json
 /ca
 
+src/api/request_NYT/__pycache__/articles_functions.cpython-38.pyc
+src/api/elastic/__pycache__/request_elasticsearch.cpython-38.pyc
+src/api/elastic/__pycache__/connect_Elastic.cpython-38.pyc
+src/api/__pycache__/main.cpython-38.pyc
+create_bdd/__pycache__/articles_functions.cpython-38.pyc
+__pycache__/request_elasticsearch.cpython-38.pyc
+__pycache__/dashboard.cpython-38.pyc
+__pycache__/connect_Elastic.cpython-38.pyc

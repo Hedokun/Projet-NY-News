@@ -9,6 +9,8 @@ from request_elasticsearch import get_count_article_range2
 import dash_bootstrap_components as dbc
 from datetime import date
 import dash_table
+from request_elasticsearch import *
+
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css])
@@ -128,7 +130,6 @@ tabs = dbc.Tabs(
     [graph_1, graph_2],
     className="mb-3"
 )
-from request_elasticsearch import *
 
 
 app = JupyterDash(__name__)
@@ -205,13 +206,7 @@ def display_category(selected_category):
 def update_graph(mot_recherche):
     if mot_recherche== None :
         mot_recherche = "France"
-    if mot_recherche== None :
-        mot_recherche = "France"
     data = update_date(mot_recherche)
-
-
-
-
 
     # graphique avec plotly
     fig_keywords = px.line(data, x='Date', y='Count',
