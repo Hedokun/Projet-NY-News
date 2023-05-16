@@ -5,3 +5,4 @@
 /resources/config_elastic_connet.json
 /src/api/ressources/ca
 
+*.pyc
