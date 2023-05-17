@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 from request_NYT.articles_functions import get_article
-from .connect_Elastic import connect_elastic_docker_server, push_database
+from .connect_Elastic import connect_elastic_docker_server, push_database,connect_elastic_server
 from fastapi import APIRouter
 import pandas as pd
 
@@ -103,6 +103,7 @@ def check_time(dash_min,dash_max):
     bdd_min = time["min_time"]
     bdd_max = time["max_time"]
     dash_min = datetime.strptime(dash_min, "%Y-%m-%d")
+    dash_max = datetime.strptime(dash_max, "%Y-%m-%d")
     if dash_min < bdd_min:
         daterange = pd.date_range(dash_min, bdd_min, freq='M').sort_values(ascending=False)
         for i in daterange[:-1]:
