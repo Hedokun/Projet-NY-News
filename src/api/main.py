@@ -2,9 +2,9 @@
 import json
 from fastapi import FastAPI
 from elastic.request_elasticsearch import router
-from elastic.connect_Elastic import create_database
-from request_NYT.articles_functions import create_tab_article
-from elastic.connect_Elastic import connect_elastic_server
+from request_NYT.articles_functions import get_article
+from elastic.connect_Elastic import connect_elastic_server, push_database
+
 
 with open("ressources/mapping.json") as json_data_file:
     mapping = json.load(json_data_file)
@@ -12,9 +12,11 @@ with open("ressources/mapping.json") as json_data_file:
 es = connect_elastic_server()
 app = FastAPI(title="NYT API")
 app.include_router(router)
-#def request_NYT():
-    #es = connect_elastic_server()
-    #create_tab_article()
+
+#def request_NYT(years,mounth,index_name):
+
+    #data = get_article(years,mounth,index_name)
+    #push_database(es,data,"article",mapping)
     #try :
         #create_database(es, "data_brutes/data_articles/nyt.csv","article", mapping)
     #except :
@@ -27,5 +29,7 @@ app.include_router(router)
 @app.get("/")
 async def root():
     return {"message":"lol"}
+
+
 
 
