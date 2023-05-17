@@ -13,7 +13,7 @@ with open("./ressources/request.json") as json_data_file:
 
 router = APIRouter()
 
-es = connect_elastic_docker_server()
+es = connect_elastic_server()
 
 
 def get_count_article_range(elasticsearch, request):
