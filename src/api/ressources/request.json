@@ -79,6 +79,16 @@
               "categories": ""
             }
           }
+        ],
+        "filter": [
+          {
+            "range": {
+              "pub_date": {
+                "gte": "",
+                "lte": ""
+              }
+            }
+          }
         ]
       }
     },
