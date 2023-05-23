@@ -76,22 +76,29 @@ footer = html.Footer(
     className="footer py-3 mt-5 bg-light"
 )
 
+recherche = dbc.Col(dbc.Input
+                            (id='mot-recherche',placeholder="Entrez le mot à rechercher", type="text"),width=4,className="mb-2 rounded")
+Dropdown = dbc.Col(dcc.Dropdown
+                            (id='dropdown_categories', options=[{'label': category, 'value': category} for category in reponse_get_top10["Keyword"]],style={'width': '60%'},className= "mb-2 rounded" , placeholder="Sélectionnez une catégorie"))
+picker = dbc.Col(dcc.DatePickerRange
+                            (id='my_date_picker_range', min_date_allowed=min_datetime, max_date_allowed=max_datetime,initial_visible_month=min_datetime,className= "mb-2 rounded"))
+
  
 # bouton: mot de recherche, sélection catégorie, date
 selector =dbc.Row([
             dbc.Card(             
-                dbc.Row(children = [
-                    dbc.Col(dbc.Input
-                            (id='mot-recherche',placeholder="Entrez le mot à rechercher", type="text"),width=12,className="mb-2 rounded"),
-                    dbc.Col(dcc.Dropdown
-                            (id='dropdown_categories', options=[{'label': category, 'value': category} for category in reponse_get_top10["Keyword"]],style={'width': '100%'} , placeholder="Sélectionnez une catégorie")),
-                    dbc.Col(dcc.DatePickerRange
-                            (id='my_date_picker_range', min_date_allowed=min_datetime, max_date_allowed=max_datetime,initial_visible_month=min_datetime,className= "rounded"))
-                    
+                dbc.Row(children = [picker
+                
         ],className="flex-column"),className="rounded shadow-sm p-4"),  
     ],className="p-3")
 
+picker = dbc.Col(dcc.DatePickerRange(id='my_date_picker_range', min_date_allowed=min_datetime,
+                                     max_date_allowed=max_datetime, initial_visible_month=min_datetime, className="mb-2 rounded"))
 
+# bouton: mot de recherche, sélection catégorie, date
+selector = dbc.Row([
+    dbc.Col(dbc.Card(dbc.Row(children=[picker]), className="flex-column"), className="rounded shadow-sm p-4"),
+], className="p-3")
         
 #tableau 1 titres et liens
 tab_Titres = dbc.Col(
@@ -111,40 +118,25 @@ tab_Titres = dbc.Col(
         bordered=True,
         responsive=True,
         hover=True,
-        striped=True,
+        striped=True
     ),
 )
 #graph 1 categories
 graph_1 =  dbc.Tab(
-    label="Graphique 1",
-    children=[
+    label="Tendance de la recherche",
+    children=[recherche,
         dbc.Card(
             dbc.CardBody(dcc.Graph(id='graphique-1')),className="shadow bg-white rounded")
     ]
 )
 #graph 2 abstract
 graph_2 = dbc.Tab(
-    label="Graphique 2",
-    children=[
+    label="Tendance par thematique d'article",
+    children=[Dropdown,
         dbc.Card(
             dbc.CardBody(dcc.Graph(id='graphique-2')),className="shadow bg-white rounded")
     ]
 )
-#tableau 2 Titres
-tableau_2 = dbc.Col(
-                html.Table([
-                    html.Thead(html.Tr([html.Th("Titres")]), style={'background-color': '#f8f9fa'}),
-                    html.Tbody([html.Tr([html.Td(element)]) for element in reponse_get_last_news["Title"]])
-                ], className="table")
-                , width=4)
-
-#tableau 1 liens
-tableau_liens_2 = dbc.Col(
-                html.Table([
-                    html.Thead(html.Tr([html.Th("Liens")]), style={'background-color': '#f8f9fa'}),
-                    html.Tbody([html.Tr([html.Td(html.A(href=lien, children=lien))]) for lien in reponse_get_last_news["Url"]])
-                ], className="table")
-                , width=4)
 
 tabs = dbc.Tabs(
     [graph_1, graph_2],
@@ -156,14 +148,10 @@ tabs = dbc.Tabs(
 app.layout = html.Div(children=[  
         header,
         logo, 
-        #selector,
         dbc.Row([
-        #dbc.Row([tabs,tab_1], className="mb-3"),
-        #dbc.Row([graph_2,tableau_2], className="p-3")
-        #dbc.Row([
-        dbc.Col(selector,width=2, className="p-3"),        
+        dbc.Col(selector,width=2, className="p-2"),        
         dbc.Col(tabs, className="p-3"),
-        dbc.Col(tab_Titres,width=3, className="p-3"),
+        dbc.Col(tab_Titres,width=3, className="p-4"),
         footer
         ])
 
@@ -208,9 +196,9 @@ def update_graph(mot_recherche,dropdown_categories, start_date,end_date):
     display_category(dropdown_categories)
     # graphique avec plotly
     fig_keywords = px.line(data_article, x='Date', y='Count',
-                  title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche))
+                  title='Nombre d\'articles contenant le mot "{}"'.format(mot_recherche))
     fig_categories = px.line(data_categories, x='Date', y='Count',
-                  title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche),color_discrete_sequence=['green'])
+                  title='Nombre d\'articles de la catégorie "{}"'.format(dropdown_categories),color_discrete_sequence=['green'])
     #fig_abstract = px.line(data, x='Date', y='Count',
                   #title='Nombre d\'articles par jour contenant le mot "{}"'.format(mot_recherche),color_discrete_sequence=['red'])
                   
