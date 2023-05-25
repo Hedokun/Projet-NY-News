@@ -1,0 +1,19 @@
+version: "3.9"
+
+networks:
+   nyt:
+
+
+services:
+    dash:
+        image:uphold/dash-core:latest
+        networks:nyt
+    python:
+        image: python:latest
+        networks: nyt    
+    dashboard:
+        image:dashboard
+        ports:
+            - "8000:8000"
+        networks:nyt
+    
