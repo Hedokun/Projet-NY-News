@@ -5,4 +5,5 @@
 /resources/config_elastic_connet.json
 /src/api/ressources/ca
 /.iead
-/_pycache_
+*/_pycache_
+/*.pyc
