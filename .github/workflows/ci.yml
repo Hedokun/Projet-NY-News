@@ -49,11 +49,10 @@ jobs:
           file: ./src/api/Dockerfile
           push: true
           tags: datascientestnyt/api_nyt:latest
-        
+      - run: |
+          cd ../../
       -
         name: Build and push front
-        run :  |
-          cd ../../
         uses: docker/build-push-action@v4
         with:
           context: .
