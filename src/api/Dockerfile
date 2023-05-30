@@ -1,12 +1,14 @@
 FROM debian:latest
 
-RUN apt-get update && apt-get install python3-pip -y && pip install --upgrade pip \
-    pip install wheel
+RUN apt-get update && apt-get install python3-pip -y && pip install --upgrade pip && pip install fastapi uvicorn
+
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 COPY . .
-
+COPY . request_NYT/
+COPY . elastic/
+COPY . ressources/
 #ADD main.py
 #ADD test_App.py
 #ADD articles_functions.py /request_NYT/articles_functions.py
@@ -17,4 +19,5 @@ COPY . .
 #ADD mapping.json ressources/mapping.json
 #ADD request.json ressources/request.json
 
-CMD python3 main.py
+CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
+#CMD python3 main.py

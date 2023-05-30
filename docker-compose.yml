@@ -3,17 +3,36 @@ version: "3.9"
 networks:
    nyt:
 
-
 services:
-    dash:
-        image:uphold/dash-core:latest
-        networks:nyt
-    python:
-        image: python:latest
-        networks: nyt    
-    dashboard:
-        image:dashboard
+    es:
+        image: elasticsearch:7.2.0
+        container_name: elastic
+        networks:
+          - nyt
         ports:
-            - "8000:8000"
-        networks:nyt
-    
+          - "9200:9200"
+        environment:
+          discovery.type: single-node
+    kibana:
+        image: elasticsearch:7.2.0
+        networks:
+          - nyt
+    front_dash:
+        image: front_dash
+        ports:
+          - 5000:8000
+        networks:
+          - nyt
+        depends_on:
+          - back_end
+    back_end:
+        image: back_end
+        container_name: back_end
+        command: uvicorn main:app --reload
+        networks:
+            - nyt
+              #ports:
+              #   - target: 8000
+              #     published: 8000
+              #     protocol: tcp
+              #     mode: host
