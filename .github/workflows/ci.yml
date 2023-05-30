@@ -55,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./front_dash
+          file: ./front_dash/Dockerfile
           push: true
           tags: datascientestnyt/front_nyt:latest
           
