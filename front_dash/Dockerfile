@@ -8,7 +8,7 @@ RUN pip install -r requirements.txt
 
 ADD dashboard.py /my_dash/dashboard.py
 
-
+WORKDIR /my_dash/
 EXPOSE 8000
 
 CMD python3 dashboard.py
