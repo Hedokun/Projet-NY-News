@@ -1,13 +1,12 @@
-FROM python:latest
+FROM debian:latest
 
-RUN pip install --upgrade pip && \
-    pip install aldryn_apphooks_config \
-    pip install --upgrade pip
-
+RUN apt-get update && apt-get install python3-pip -y && pip install --upgrade pip \
+    pip install wheel
+    
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY  .
 
 EXPOSE 8000
 
