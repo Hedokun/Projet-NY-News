@@ -60,6 +60,7 @@ def parse_response(response):
     return df
 
 def create_bulked_data(response,index_name):
+    'Créer une liste de dictionnaire des données utiles'
     bulked_data = []
     for article in response:
         keywords = [keyword['value'] for keyword in article['keywords'] if keyword['name'] == 'subject']
@@ -84,6 +85,13 @@ def create_bulked_data(response,index_name):
     return bulked_data
 
 def get_article(years,mounth,index_name):
+    """
+    récupère tous les articles d'un mois, transforme la requête en dictionnaire et créer une liste de dictionnaire des données utiles
+    :param year: int
+    :param month: int
+    :index_name: str
+    :return: requete
+    """
     response = get_api_archive(years,mounth)
     extract = get_response(response)
     bulkded_data = create_bulked_data(extract,index_name)
