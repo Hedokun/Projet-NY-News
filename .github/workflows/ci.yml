@@ -52,6 +52,7 @@ jobs:
         
       -
         name: Build and push front
+        run :  cd ../../
         uses: docker/build-push-action@v4
         with:
           context: .
