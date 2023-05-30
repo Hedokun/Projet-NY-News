@@ -42,10 +42,21 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Build and push
+        name: Build and push back
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./src/api/Dockerfile
           push: true
-          tags: datascientestnyt/clockbox:latest
+          tags: datascientestnyt/api_nyt:latest
+        
+      -
+        name: Build and push front
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./front_dash
+          push: true
+          tags: datascientestnyt/front_nyt:latest
+          
+        
