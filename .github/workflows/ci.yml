@@ -48,4 +48,4 @@ jobs:
           context: .
           file: ./src/api/Dockerfile
           push: true
-          tags: datascientestNYT/clockbox:latest
+          tags: datascientestnyt/clockbox:latest
