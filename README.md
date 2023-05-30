@@ -25,6 +25,8 @@ Pour répondre à cette problématique, nous avons décidé de developper un Das
 
 Nous avons donc construit notre application de cette manière:
 
+![Screenshot de l'application](https://github.com/Hedokun/Projet-NY-News/edit/main/archi_glob2.png)
+
 Elle se décompose en deux parties principales.
 Il y a la partie front_end dans le dossier front_dash. Ce dossier contient le script python renvoyant le tableau de bord à l'utilisateur, ce tableau de bord est réalisé avec l'outil Dash.
 Il y a la partie Back_end dans le dossier src. Il contient le coeur de l'application c'est à dire l'appel de l'API du New York Times, la création de la Base de données et la valorisation de ces données. Vous retrouverez aussi les notebooks qui nous ont permis de découvrir et explorer les API.  
