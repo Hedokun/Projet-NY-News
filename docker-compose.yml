@@ -30,7 +30,7 @@ services:
   front_dash:
     image: datascientestnyt/front_nyt:latest
     environment:
-      - URL_API
+      - URL_API=1.1
     container_name: dashboard
     ports:
       - "5000:8000"
