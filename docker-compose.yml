@@ -33,7 +33,7 @@ services:
       - URL_API=1.1
     container_name: dashboard
     ports:
-      - "5000:8000"
+      - 5000:8000
     networks:
       - nyt
     depends_on:
