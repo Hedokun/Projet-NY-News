@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="32734c24-c021-4210-b16e-44b71b88514e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front_dash/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/front_dash/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/Dockerfile" afterDir="false" />
+    <list default="true" id="32734c24-c021-4210-b16e-44b71b88514e" name="Default Changelist" comment="modif Dockerfile et dockercompose">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,5 +103,9 @@
       <updated>1684312388114</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="modif Dockerfile et dockercompose" />
+    <option name="LAST_COMMIT_MESSAGE" value="modif Dockerfile et dockercompose" />
   </component>
 </project>
