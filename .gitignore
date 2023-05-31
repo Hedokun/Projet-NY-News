@@ -4,4 +4,6 @@
 /data_brutes/data_books/*.txt
 /resources/config_elastic_connet.json
 /src/api/ressources/ca
-
+/.iead
+*/_pycache_
+/*.pyc

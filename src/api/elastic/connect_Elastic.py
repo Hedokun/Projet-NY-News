@@ -12,6 +12,9 @@ port = config["route_acces"]["port"]
 
 
 def connect_elastic_server():
+    """
+    Fait la connexion avec le serveur de elasticsearch
+    """
     es = Elasticsearch(hosts=f"https://{ip}:{port}",
                        http_auth=("elastic", ELASTIC_PASSWORD))
     return es
@@ -31,16 +34,36 @@ def push_database(elasticsearch, data, tablename, setting):
 
 
 def create_database_bulker(elasticsearch, data, tablename, setting):
+    """
+    Créer la BDD elasticsearch avec un mapping précis lorsque la BDD n'est pas un csv
+    :elasticsearch : connect_elastic_server()
+    :data : 
+    :tablename : 
+    :setting :
+    """
     elasticsearch.indices.create(index=tablename, body=setting)
     helpers.bulk(elasticsearch, data, tablename)
 
 
 def update_database(elasticsearch, data, tablename):
+    """
+    Met à jour la base de données sur elasticsearch
+    :elasticsearch : connect_elastic_server()
+    :data : 
+    :tablename : 
+    """
     helpers.bulk(elasticsearch, data, tablename)
 
 
 
 def create_database_with_csv(elasticsearch, filepath, tablename, setting):
+    """
+    Créer la BDD elasticsearch avec un mapping précis lorsque la BDD est un csv
+    :elasticsearch : connect_elastic_server()
+    :filepath : str
+    :tablename : 
+    :setting :
+    """
     elasticsearch.indices.create(index=tablename, body=setting)
 
     with open(filepath, encoding='utf-8') as f:
@@ -49,6 +72,13 @@ def create_database_with_csv(elasticsearch, filepath, tablename, setting):
 
 
 def update_database_with_csv(elasticsearch, filepath, tablename, setting):
+    """
+    Met à jour la base de données sur elasticsearch lorsque la BDD est un csv
+    :elasticsearch : connect_elastic_server()
+    :filepath : str
+    :tablename :
+    :setting : 
+    """
     elasticsearch.indices.update(index=tablename, body=setting)
 
     with open(filepath, encoding='utf-8') as f:

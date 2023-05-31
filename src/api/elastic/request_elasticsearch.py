@@ -17,6 +17,7 @@ es = connect_elastic_server()
 
 
 def get_count_article_range(elasticsearch, request):
+
     date = []
     count = []
     result_request = elasticsearch.search(index='article', body=request,
@@ -25,10 +26,29 @@ def get_count_article_range(elasticsearch, request):
         date.append(i['key_as_string'])
         count.append(i["doc_count"])
     return date, count
+@router.get("/get_total_count_article/",tags=['data'])
+def get_total_count_article(min_date,max_date):
+    """
+    Retourne pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times
+    """
+    check_time(min_date,max_date)
+    date = []
+    count = []
+    request = config["get_total_article_count"]
+    request['query']["bool"]["filter"][0]['range']['pub_date']["gte"] = min_date
+    request['query']["bool"]["filter"][0]['range']['pub_date']["lte"] = max_date
+    result_request = es.search(index='article', body=request, filter_path=["aggregations.group_by_date.buckets"])
+    for i in result_request['aggregations']["group_by_date"]["buckets"]:
+        date.append(i['key_as_string'])
+        count.append(i["doc_count"])
+    d = {'Date': date, 'Count': count}
+    return d
 
-
-@router.get("/get_count_article/")
-def get_count_article_range2(param, min_date, max_date):
+@router.get("/get_count_filter_article/",tags=['data'])
+def get_count_filter_article(param, min_date, max_date):
+    """
+    Retourne pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times contenant dans son titre le @param
+    """
     check_time(min_date,max_date)
     date = []
     count = []
@@ -44,8 +64,11 @@ def get_count_article_range2(param, min_date, max_date):
     return d
 
 
-@router.get("/get_last_news/")
+@router.get("/get_last_news/",tags=['data'])
 def get_last_news():
+    """
+    Renvois une liste contenant le titre et l'url des derniers articles insérés dans la base de donnée
+    """
     request_last_news = config["get_last_news"]
     title = []
     url = []
@@ -57,8 +80,11 @@ def get_last_news():
     return d
 
 
-@router.get("/get_time_bdd/")
+@router.get("/get_time_bdd/",tags=['data'])
 def get_time_bdd():
+    """
+    Récupère la date du plus vieil article et du plus récent article stockés en base
+    """
     request_time_bdd = config['get_time_bdd']
     result_request = es.search(index='article', body=request_time_bdd, filter_path=["aggregations"])
     min_time = datetime.strptime(result_request['aggregations']["min_date"]["value_as_string"], "%Y-%m-%d")
@@ -67,8 +93,11 @@ def get_time_bdd():
     return d
 
 
-@router.get("/get_top10/")
+@router.get("/get_top_ten_categorie/",tags=['data'])
 def get_top_ten_categorie():
+    """
+    Renvoi une liste des 10 catégories d'article les plus présentes dans la base de données
+    """
     request_top_ten_categories = config["get_top_ten_categorie"]
     count = []
     keyword = []
@@ -81,8 +110,11 @@ def get_top_ten_categorie():
     return d
 
 
-@router.get("/get_cat_by_day/")
-def get_cat_by_day(param, min_date, max_date):
+@router.get("/get_categories_count_by_day/",tags=['data'])
+def get_categories_count_by_day(param, min_date, max_date):
+    """
+    Retourne pour une catégorie d'article et pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times
+    """
     check_time(min_date,max_date)
     date = []
     count = []
@@ -99,6 +131,9 @@ def get_cat_by_day(param, min_date, max_date):
 
 
 def check_time(dash_min,dash_max):
+    """
+    Récupère la date demandée par l'utilisateur et vérifie si les données sont présentes en base. Si non, requte sur l'API NYT et insère les données demandées dans la base
+    """
     time = get_time_bdd()
     bdd_min = time["min_time"]
     bdd_max = time["max_time"]

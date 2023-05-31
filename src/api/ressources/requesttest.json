@@ -79,41 +79,6 @@
               "categories": ""
             }
           }
-        ],
-        "filter": [
-          {
-            "range": {
-              "pub_date": {
-                "gte": "",
-                "lte": ""
-              }
-            }
-          }
-        ]
-      }
-    },
-    "aggs": {
-      "group_by_date": {
-        "date_histogram": {
-          "field": "pub_date",
-          "calendar_interval": "day",
-          "format": "yyyy-MM-dd"
-        }
-      }
-    }
-  },
-  "get_total_article_count": {
-    "query": {
-      "bool": {
-        "filter": [
-          {
-            "range": {
-              "pub_date": {
-                "gte": "",
-                "lte": ""
-              }
-            }
-          }
         ]
       }
     },

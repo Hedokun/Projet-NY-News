@@ -10,7 +10,16 @@ with open("ressources/mapping.json") as json_data_file:
     mapping = json.load(json_data_file)
 
 es = connect_elastic_server()
-app = FastAPI(title="NYT API")
+app = FastAPI(title="NYT API",tags=[
+    {
+    'name':'home',
+    'description':'default functions'
+    },
+    {
+    'name':'data',
+    'description':'fonctions permettant de requêter la base de donnée elasticSearch'
+    }
+])
 app.include_router(router)
 
 #def request_NYT(years,mounth,index_name):
@@ -28,7 +37,7 @@ app.include_router(router)
 
 @app.get("/")
 async def root():
-    return {"message":"lol"}
+    return {"message":"Bienvenue sur l'API NY-Time-News"}
 
 
 
