@@ -191,9 +191,6 @@ app.layout = html.Div(children=[
     logo,
     # selector,
     dbc.Row([
-        # dbc.Row([tabs,tab_1], className="mb-3"),
-        # dbc.Row([graph_2,tableau_2], className="p-3")
-        # dbc.Row([
         dbc.Col(width=2, className="p-3", id="selector"),
         dbc.Col(tabs, className="p-3"),
         dbc.Col(tab_Titres,width=3, className="mr-6"),
