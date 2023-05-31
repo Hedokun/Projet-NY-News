@@ -294,5 +294,5 @@ def create_dashboard():
     app.run_server()
 
 
-# lancé Dash avec Jup
+# lancé Dash 
 create_dashboard()
