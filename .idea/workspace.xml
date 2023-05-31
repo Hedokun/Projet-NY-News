@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32734c24-c021-4210-b16e-44b71b88514e" name="Default Changelist" comment="modif Dockerfile et dockercompose">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_dash/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/front_dash/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_dash/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/front_dash/dashboard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_dash/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/front_dash/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.sh" beforeDir="false" afterPath="$PROJECT_DIR$/setup.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,6 +110,18 @@
       <updated>1684312388114</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="modif Dockerfile et dockercompose" />
