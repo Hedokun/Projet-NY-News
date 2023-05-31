@@ -18,17 +18,20 @@ services:
         networks:
           - nyt
     front_dash:
-        image: front_dash
+        image: datascientestnyt/front_nyt:latest
+        container_name: dashboard
         ports:
-          - 5000:8000
+          - "5000:8000"
         networks:
           - nyt
         depends_on:
           - back_end
     back_end:
-        image: back_end
+        image: datascientestnyt/api_nyt:latest
         container_name: back_end
         command: uvicorn main:app --reload
+        ports:
+          - "8000:8000"
         networks:
             - nyt
               #ports:

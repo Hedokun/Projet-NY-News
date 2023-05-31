@@ -12,7 +12,6 @@ import requests
 
 url_api = "http://127.0.0.1:8000/"
 
-
 def get_all_data():
     response = requests.get(url_api + f"get_time_bdd/")
     reponse_get_time_bdd = json.loads(response.content.decode())
