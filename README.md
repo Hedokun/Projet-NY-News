@@ -21,7 +21,7 @@ Pour répondre à cette problématique, nous avons décidé de développer un Da
 
 Nous avons donc construit notre application de cette manière:
 
-![Screenshot de l'application](./main/archi_glob2.png)
+![Screenshot de l'application](./main/archi_glob2.png?raw=true)
 
 Elle se décompose en deux parties principales.
 Il y a la partie front_end dans le dossier front_dash. Ce dossier contient le script python renvoyant le tableau de bord à l'utilisateur, ce tableau de bord est réalisé avec l'outil Dash. 
