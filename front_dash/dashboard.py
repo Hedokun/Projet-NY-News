@@ -1,5 +1,4 @@
 import json
-
 import dash
 import pandas as pd
 import plotly.express as px
@@ -7,7 +6,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from datetime import *
-import dash_table
 import requests
 
 url_api = "http://127.0.0.1:8000/"
@@ -80,14 +78,13 @@ footer = html.Footer(
     className="footer py-3 mt-5 bg-light"
 )
 
-footer2 = html.Footer(html.P("LOL"))
 
 # bouton: mot de recherche, sélection catégorie, date
 selector1 = dbc.Row([
     dbc.Card(
         dbc.Row(children=[
             dbc.Col(dcc.DatePickerRange
-                    (id='my_date_picker_range_3', min_date_allowed=min_datetime - timedelta(days=75),
+                    (id='my_date_picker_range_1', min_date_allowed=min_datetime - timedelta(days=75),
                      max_date_allowed=max_datetime + timedelta(days=75),
                      initial_visible_month=min_datetime, className="rounded"))
         ], className="flex-column"), className="rounded shadow-sm p-4"),
@@ -100,7 +97,7 @@ selector2 = dbc.Row([
                     (id='mot_recherche', placeholder="Entrez le mot à rechercher", type="text"), width=12,
                     className="mb-2 rounded"),
             dbc.Col(dcc.DatePickerRange
-                    (id='my_date_picker_range_1', min_date_allowed=min_datetime - timedelta(days=150),
+                    (id='my_date_picker_range_2', min_date_allowed=min_datetime - timedelta(days=150),
                      max_date_allowed=max_datetime, initial_visible_month=min_datetime, className="rounded"))
 
         ], className="flex-column"), className="rounded shadow-sm p-4"),
@@ -114,13 +111,12 @@ selector3 = dbc.Row([
                      options=[{'label': category, 'value': category} for category in reponse_get_top10["Keyword"]],
                      style={'width': '100%'}, className='mb-2', placeholder="Sélectionnez une catégorie")),
             dbc.Col(dcc.DatePickerRange
-                    (id='my_date_picker_range_2', min_date_allowed=min_datetime - timedelta(days=75),
+                    (id='my_date_picker_range_3', min_date_allowed=min_datetime - timedelta(days=75),
                      max_date_allowed=max_datetime + timedelta(days=75),
                      initial_visible_month=min_datetime, className="rounded"))
 
         ], className="flex-column"), className="rounded shadow-sm p-4"),
 ], className="p-3")
-
 
 
 
@@ -148,7 +144,7 @@ tab_Titres = dbc.Col(
 
 #graph 1 total articles par jours
 graph_1 = dcc.Tab(
-    label="Graphique 1", value="tab_1",
+    label="Graphique par publication totale", value="tab_1",
     children=[
         dbc.Card(
             dbc.CardBody(dcc.Graph(id='graphique-1')), className="shadow bg-white rounded")
@@ -156,7 +152,7 @@ graph_1 = dcc.Tab(
 )
 # graph 2 categories
 graph_2 = dcc.Tab(id='graph',
-                  label="Graphique 2", value="tab_2",
+                  label="Graphique par mot clé", value="tab_2",
                   children=[
                       dbc.Card(
                           dbc.CardBody(dcc.Graph(id='graphique-2')), className="shadow bg-white rounded")
@@ -164,31 +160,13 @@ graph_2 = dcc.Tab(id='graph',
                   )
 # graph 3 abstract
 graph_3 = dcc.Tab(
-    label="Graphique 3", value="tab_3",
+    label="Graphique par catégorie", value="tab_3",
     children=[
         dbc.Card(
             dbc.CardBody(dcc.Graph(id='graphique-3')), className="shadow bg-white rounded")
     ]
 )
 
-
-
-
-# tableau 2 Titres
-tableau_2 = dbc.Col(
-    html.Table([
-        html.Thead(html.Tr([html.Th("Titres")]), style={'background-color': '#f8f9fa'}),
-        html.Tbody([html.Tr([html.Td(element)]) for element in reponse_get_last_news["Title"]])
-    ], className="table")
-    , width=4)
-
-# tableau 2 liens
-tableau_liens_2 = dbc.Col(
-    html.Table([
-        html.Thead(html.Tr([html.Th("Liens")]), style={'background-color': '#f8f9fa'}),
-        html.Tbody([html.Tr([html.Td(html.A(href=lien, children=lien))]) for lien in reponse_get_last_news["Url"]])
-    ], className="table")
-    , width=4)
 
 tabs = dcc.Tabs(id="tabs_select", value="tab_1", children=
 [graph_1,graph_2, graph_3, ],
@@ -278,8 +256,8 @@ def update_selector(value):
 
 @app.callback(
     dash.dependencies.Output('graphique-1', "figure"),
-    [dash.dependencies.Input('my_date_picker_range_3','start_date'),
-     dash.dependencies.Input('my_date_picker_range_3','end_date')], prevent_initial_call = False)
+    [dash.dependencies.Input('my_date_picker_range_1','start_date'),
+     dash.dependencies.Input('my_date_picker_range_1','end_date')], prevent_initial_call = False)
 
 def update_graph1(start_date,end_date):
     """
@@ -302,8 +280,8 @@ def update_graph1(start_date,end_date):
 @app.callback(
     dash.dependencies.Output('graphique-2', 'figure'),
     [dash.dependencies.Input('mot_recherche', 'value'),
-     dash.dependencies.Input('my_date_picker_range_1', 'start_date'),
-     dash.dependencies.Input('my_date_picker_range_1', 'end_date')], prevent_initial_call=False)
+     dash.dependencies.Input('my_date_picker_range_2', 'start_date'),
+     dash.dependencies.Input('my_date_picker_range_2', 'end_date')], prevent_initial_call=False)
 
 def update_graph2(mot_recherche, start_date, end_date):
     """
@@ -313,7 +291,10 @@ def update_graph2(mot_recherche, start_date, end_date):
     :return: Figure du graphique mise à jour
     """
     if mot_recherche == None:
-        mot_recherche = "France"
+        mot_recherche = "Biden"
+    if start_date == None and end_date == None:
+        start_date = min_datetime.date()
+        end_date = max_datetime.date()
     data_article = get_count_filter_article(mot_recherche, start_date, end_date)
     # graphique avec plotly
     fig_keywords = px.line(data_article, x='Date', y='Count',
@@ -326,8 +307,8 @@ def update_graph2(mot_recherche, start_date, end_date):
 @app.callback(
     dash.dependencies.Output('graphique-3', 'figure'),
     [dash.dependencies.Input('dropdown_categories', 'value'),
-     dash.dependencies.Input('my_date_picker_range_2', 'start_date'),
-     dash.dependencies.Input('my_date_picker_range_2', 'end_date')], prevent_initial_call=False)
+     dash.dependencies.Input('my_date_picker_range_3', 'start_date'),
+     dash.dependencies.Input('my_date_picker_range_3', 'end_date')], prevent_initial_call=False)
 
 def update_graph3(dropdown_categories, start_date, end_date):
     """
@@ -337,11 +318,16 @@ def update_graph3(dropdown_categories, start_date, end_date):
     :param end_date: Date de fin
     :return: Figure du graphique mise à jour
     """
+    if dropdown_categories == None:
+        dropdown_categories = "U.S"
+    if start_date == None and end_date == None:
+        start_date = min_datetime.date()
+        end_date = max_datetime.date()    
     data_categories = get_categories_count_by_day(dropdown_categories, start_date, end_date)
     display_category(dropdown_categories)
     fig_categories = px.line(data_categories, x='Date', y='Count',
-                             title='Nombre d\'articles publiés dans la categories "{}"'.format(dropdown_categories),
-                             color_discrete_sequence=['green'])
+                             title='Nombre d\'articles publiés dans la catégorie "{}"'.format(dropdown_categories),
+                             color_discrete_sequence=['red'])
     get_all_data()
     return fig_categories
 
@@ -353,5 +339,5 @@ def create_dashboard():
     app.run_server()
 
 
-# lancé Dash 
+# lancé le Dash 
 create_dashboard()
