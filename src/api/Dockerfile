@@ -11,7 +11,7 @@ RUN pip3 install -r requirements.txt
 #COPY . ressources/
 #COPY . main.py
 
-COPY ./src/api 
+COPY ./src/api .
 
 WORKDIR /src/api
 
