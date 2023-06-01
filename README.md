@@ -24,7 +24,9 @@ Nous avons donc construit notre application de cette manière:
 ![Screenshot de l'application](archi_glob2.png?raw=true)
 
 Elle se décompose en deux parties principales.
+
 Il y a la partie front_end dans le dossier front_dash. Ce dossier contient le script python renvoyant le tableau de bord à l'utilisateur, ce tableau de bord est réalisé avec l'outil Dash. 
+
 Il y a la partie Back_end dans le dossier src. Il contient le coeur de l'application c'est à dire l'appel de l'API du New York Times, la création de la Base de données et la valorisation de ces données. Vous retrouverez aussi les notebooks qui nous ont permis de découvrir et explorer les API.
 
 Les requêtes automatisées de L'API du New York Times sont dans le dossier request_NYT. Pour valoriser nos données, nous créerons une base de données NoSQL sur elasticsearch qui offre un système de requêtes performant sur des données textuelles. La connexion à cette base et les différentes requêtes permettant d'alimenter le Dashboard sont dans e dossier elastic. Enfin, le fichier test_App contient les tests de notre application.
