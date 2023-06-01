@@ -30,7 +30,6 @@ reponse_get_top10, reponse_get_last_news, reponse_get_time_bdd = get_all_data()
 min_datetime = datetime.strptime(reponse_get_time_bdd["min_time"], "%Y-%m-%dT%H:%M:%S")
 
 max_datetime = datetime.strptime(reponse_get_time_bdd["max_time"], "%Y-%m-%dT%H:%M:%S")
-print('')
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css])
 app.config.suppress_callback_exceptions = True

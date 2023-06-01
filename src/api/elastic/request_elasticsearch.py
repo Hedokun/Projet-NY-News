@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("..")
 from request_NYT.articles_functions import get_article
-from .connect_Elastic import connect_elastic_docker_server, push_database,connect_elastic_server
+from .connect_Elastic import connect_elastic_docker_server, push_database,connect_elastic_server, create_database_bulker
 from fastapi import APIRouter
 import pandas as pd
 
@@ -14,6 +14,12 @@ with open("./ressources/request.json") as json_data_file:
 router = APIRouter()
 
 es = connect_elastic_server()
+
+@router.post('/post_data_to_database/', tags=['data'])
+def post_data_to_database(years,month):
+    data = get_article(years,month,"article")
+    push_database(es,data,"article")
+
 
 
 def get_count_article_range(elasticsearch, request):

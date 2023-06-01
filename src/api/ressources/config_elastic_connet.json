@@ -4,7 +4,7 @@
     "password": "datascientest"
   },
   "route_acces": {
-    "ip": "	my-deployment-29afab.es.europe-west1.gcp.cloud.es.io",
+    "ip": "my-deployment-29afab.es.europe-west1.gcp.cloud.es.io",
     "port": "443"
   },
   "ELASTIC_PASSWORD": "4xpfflQyFlJ7jFtmg8EP4gMK"

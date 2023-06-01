@@ -5,6 +5,9 @@ import json
 with open("./ressources/config_elastic_connet.json") as json_data_file:
     config = json.load(json_data_file)
 
+with open("./ressources/mapping.json") as json_data_file:
+    mapping = json.load(json_data_file)
+
 ELASTIC_PASSWORD = config["ELASTIC_PASSWORD"]
 ip = config["route_acces"]["ip"]
 port = config["route_acces"]["port"]
@@ -26,14 +29,14 @@ def connect_elastic_docker_server():
     return es
 
 
-def push_database(elasticsearch, data, tablename, setting):
+def push_database(elasticsearch, data, tablename):
     if elasticsearch.indices.exists(index=tablename):
         update_database(elasticsearch, data, tablename)
     else:
-        create_database_bulker(elasticsearch, data, tablename, setting)
+        create_database_bulker(elasticsearch, data, tablename)
 
 
-def create_database_bulker(elasticsearch, data, tablename, setting):
+def create_database_bulker(elasticsearch, data, tablename):
     """
     Créer la BDD elasticsearch avec un mapping précis lorsque la BDD n'est pas un csv
     :elasticsearch : connect_elastic_server()
@@ -41,7 +44,7 @@ def create_database_bulker(elasticsearch, data, tablename, setting):
     :tablename : 
     :setting :
     """
-    elasticsearch.indices.create(index=tablename, body=setting)
+    elasticsearch.indices.create(index=tablename, body=mapping)
     helpers.bulk(elasticsearch, data, tablename)
 
 
