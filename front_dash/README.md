@@ -1,11 +1,11 @@
-# Projet-NY-News - Frontend
+# Projet-NY-News - Front-Dash
 Ce projet a été réalisé par Alexis Peron, Edouard Loiseau et Louis Petat Lenoir dans le cadre de la formation Data Engineer de Datascientest.
 
 L’objectif de ce projet est d'utiliser le portail développeur du journal américain NY Times, qui propose plusieurs API à explorer, pour créer sa propre API.
 
 Ce repository contient le code du frontend de l'application, qui consiste en un tableau de bord interactif développé avec l'outil Dash. Le tableau de bord affiche des informations synthétiques basées sur les données collectées à partir des API du NY Times.
 
-##Architecture
+## Architecture
 Le frontend de l'application est organisé dans le dossier front_dash. Il contient le script Python dashboard.py qui génère le tableau de bord en utilisant l'outil Dash.
 
 Le tableau de bord est composé de plusieurs éléments :
@@ -17,7 +17,7 @@ Le tableau de bord est composé de plusieurs éléments :
 -Des tableaux de données qui affichent les titres et les liens des derniers articles enregistrés.
 
 
-##Comment exécuter l'application
+## Comment exécuter l'application
 Pour exécuter le frontend de l'application, suivez les étapes suivantes :
 
 Assurez-vous d'avoir Python 3 et pip installés sur votre machine.
