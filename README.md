@@ -14,7 +14,7 @@ Ce projet s'articule autour de pluiseurs étapes pour lesquelles un livrable dev
 Après avoir exploré les différentes API, nous devons donc répondre à une problématique à l'aide des données récoltées
 
 Notre volonté était d'apporter une valeur ajoutée aux différentes API, de réaliser une application qui permettrait de valoriser ces données. Grâce aux informations communes aux livres et aux articles que nous avons relevés précédement, 
-**nous estimerons la popularité d'un sujet sur le New York Times**
+nous estimerons **la popularité d'un sujet sur le New York Times**
 
 ## Architecture :
 Pour répondre à cette problématique, nous avons décidé de développer un DashBoard afin de synthétiser au moins l'information récoltée. Ce dernier affichera par exemple le nombre d'occurrences d'un mot sur une période donnée, les derniers articles publiées ou encore les catégories les plus citées.
