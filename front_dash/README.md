@@ -11,9 +11,13 @@ Le frontend de l'application est organisé dans le dossier front_dash. Il contie
 Le tableau de bord est composé de plusieurs éléments :
 
 -Une barre de navigation en haut de la page avec le titre de l'application.
+
 -Différents onglets permettant de visualiser les graphiques et les tableaux de données.
+
 -Des sélecteurs pour filtrer les données, tels que la recherche par mot-clé, la sélection de catégorie et la plage de dates.
+
 -Des graphiques interactifs qui affichent les données en fonction des sélections de l'utilisateur.
+
 -Des tableaux de données qui affichent les titres et les liens des derniers articles enregistrés.
 
 
