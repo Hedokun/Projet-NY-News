@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install python3-pip -y && pip install --upgrade pi
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-#COPY . .
+COPY . .
 COPY . request_NYT/
 COPY . elastic/
 COPY . ressources/
