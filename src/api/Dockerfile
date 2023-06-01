@@ -5,10 +5,11 @@ RUN apt-get update && apt-get install python3-pip -y && pip install --upgrade pi
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-COPY . .
+
 COPY . request_NYT/
 COPY . elastic/
 COPY . ressources/
+COPY . main.py
 
 CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
 
