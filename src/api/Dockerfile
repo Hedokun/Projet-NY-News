@@ -7,7 +7,7 @@ RUN pip3 install -r requirements.txt
 
 WORKDIR /code
 
-COPY . /code/app
+COPY src/api /code/app
 
 WORKDIR /code/app
 
