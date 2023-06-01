@@ -13,6 +13,12 @@ import requests
 url_api = "http://127.0.0.1:8000/"
 
 def get_all_data():
+    """
+    Récupère le nombre total d'articles dans une période de temps donnée
+    :param min_date: Date de début
+    :param max_date: Date de fin
+    :return: DataFrame contenant les données
+    """
     response = requests.get(url_api + f"get_time_bdd/")
     reponse_get_time_bdd = json.loads(response.content.decode())
 
@@ -30,6 +36,7 @@ reponse_get_top10, reponse_get_last_news, reponse_get_time_bdd = get_all_data()
 min_datetime = datetime.strptime(reponse_get_time_bdd["min_time"], "%Y-%m-%dT%H:%M:%S")
 
 max_datetime = datetime.strptime(reponse_get_time_bdd["max_time"], "%Y-%m-%dT%H:%M:%S")
+
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc_css])
 app.config.suppress_callback_exceptions = True
@@ -76,6 +83,16 @@ footer = html.Footer(
 footer2 = html.Footer(html.P("LOL"))
 
 # bouton: mot de recherche, sélection catégorie, date
+selector1 = dbc.Row([
+    dbc.Card(
+        dbc.Row(children=[
+            dbc.Col(dcc.DatePickerRange
+                    (id='my_date_picker_range_3', min_date_allowed=min_datetime - timedelta(days=75),
+                     max_date_allowed=max_datetime + timedelta(days=75),
+                     initial_visible_month=min_datetime, className="rounded"))
+        ], className="flex-column"), className="rounded shadow-sm p-4"),
+], className="p-3")
+
 selector2 = dbc.Row([
     dbc.Card(
         dbc.Row(children=[
@@ -105,15 +122,7 @@ selector3 = dbc.Row([
 ], className="p-3")
 
 
-selector1 = dbc.Row([
-    dbc.Card(
-        dbc.Row(children=[
-            dbc.Col(dcc.DatePickerRange
-                    (id='my_date_picker_range_3', min_date_allowed=min_datetime - timedelta(days=75),
-                     max_date_allowed=max_datetime + timedelta(days=75),
-                     initial_visible_month=min_datetime, className="rounded"))
-        ], className="flex-column"), className="rounded shadow-sm p-4"),
-], className="p-3")
+
 
 # tableau 1 titres et liens
 tab_Titres = dbc.Col(
@@ -136,7 +145,16 @@ tab_Titres = dbc.Col(
         striped=True,class_name="rounded "
     ),class_name='m-3'
 )
-# graph 1 categories
+
+#graph 1 total articles par jours
+graph_1 = dcc.Tab(
+    label="Graphique 1", value="tab_1",
+    children=[
+        dbc.Card(
+            dbc.CardBody(dcc.Graph(id='graphique-1')), className="shadow bg-white rounded")
+    ]
+)
+# graph 2 categories
 graph_2 = dcc.Tab(id='graph',
                   label="Graphique 2", value="tab_2",
                   children=[
@@ -144,7 +162,7 @@ graph_2 = dcc.Tab(id='graph',
                           dbc.CardBody(dcc.Graph(id='graphique-2')), className="shadow bg-white rounded")
                   ]
                   )
-# graph 2 abstract
+# graph 3 abstract
 graph_3 = dcc.Tab(
     label="Graphique 3", value="tab_3",
     children=[
@@ -153,15 +171,8 @@ graph_3 = dcc.Tab(
     ]
 )
 
-#graph 3 total articles par jours
 
-graph_1 = dcc.Tab(
-    label="Graphique 1", value="tab_1",
-    children=[
-        dbc.Card(
-            dbc.CardBody(dcc.Graph(id='graphique-1')), className="shadow bg-white rounded")
-    ]
-)
+
 
 # tableau 2 Titres
 tableau_2 = dbc.Col(
@@ -171,7 +182,7 @@ tableau_2 = dbc.Col(
     ], className="table")
     , width=4)
 
-# tableau 1 liens
+# tableau 2 liens
 tableau_liens_2 = dbc.Col(
     html.Table([
         html.Thead(html.Tr([html.Th("Liens")]), style={'background-color': '#f8f9fa'}),
@@ -188,7 +199,6 @@ tabs = dcc.Tabs(id="tabs_select", value="tab_1", children=
 app.layout = html.Div(children=[
     header,
     logo,
-    # selector,
     dbc.Row([
         dbc.Col(width=2, className="p-3", id="selector"),
         dbc.Col(tabs, className="p-3"),
@@ -198,12 +208,25 @@ app.layout = html.Div(children=[
 
 ])
 
-def get_total_count_article(min_date,max_date):
+def get_total_count_article(min_date, max_date):
+    """
+    Récupère le nombre total d'articles dans une période de temps donnée
+    :param min_date: Date de début
+    :param max_date: Date de fin
+    :return: DataFrame contenant les données
+    """
     response = requests.get(url_api + f"get_total_count_article/?min_date={min_date}&max_date={max_date}")
     reponse_parse = json.loads(response.content.decode())
     df = pd.DataFrame(reponse_parse)
     return df
 def get_count_filter_article(filter, min_date, max_date):
+    """
+    Récupère le nombre d'articles filtrés par un critère spécifique dans une période de temps donnée
+    :param filter: Filtre à appliquer
+    :param min_date: Date de début
+    :param max_date: Date de fin
+    :return: DataFrame contenant les données
+    """
     response = requests.get(url_api + f"get_count_filter_article/?param={filter}&min_date={min_date}&max_date={max_date}")
     reponse_parse = json.loads(response.content.decode())
     df = pd.DataFrame(reponse_parse)
@@ -211,6 +234,13 @@ def get_count_filter_article(filter, min_date, max_date):
 
 
 def get_categories_count_by_day(filter, start_date, end_date):
+    """
+    Récupère le nombre d'articles par catégorie pour chaque jour dans une période de temps donnée
+    :param filter: Filtre à appliquer
+    :param start_date: Date de début
+    :param end_date: Date de fin
+    :return: DataFrame contenant les données
+    """
     response = requests.get(url_api + f"get_categories_count_by_day/?param={filter}&min_date={start_date}&max_date={end_date}")
     response_get_cat_by_day = json.loads(response.content.decode())
     df = pd.DataFrame(response_get_cat_by_day)
@@ -218,15 +248,25 @@ def get_categories_count_by_day(filter, start_date, end_date):
 
 
 def display_category(selected_category):
+    """
+    Affiche la catégorie sélectionnée
+    :param selected_category: Catégorie sélectionnée
+    :return: Composant HTML avec le texte correspondant
+    """
     if selected_category:
         return html.H3(f"Vous avez sélectionné la catégorie : {selected_category}")
     else:
         return html.H3("Sélectionnez une catégorie")
 
-
 @app.callback(dash.dependencies.Output('selector', 'children'),
               dash.dependencies.Input('tabs_select', 'value'), prevent_initial_call=False)
+
 def update_selector(value):
+    """
+    Met à jour le sélecteur en fonction de la valeur sélectionnée
+    :param value: Valeur sélectionnée
+    :return: Sélecteur correspondant
+    """
     if value == "tab_1":
         selector = selector1
     elif value == "tab_2" :
@@ -236,14 +276,42 @@ def update_selector(value):
     return selector
 
 
-# definir une fonction de rappel pour mettre à jour le graphique en fonction du mot de recherche
+@app.callback(
+    dash.dependencies.Output('graphique-1', "figure"),
+    [dash.dependencies.Input('my_date_picker_range_3','start_date'),
+     dash.dependencies.Input('my_date_picker_range_3','end_date')], prevent_initial_call = False)
+
+def update_graph1(start_date,end_date):
+    """
+    Met à jour le graphique 1 en fonction de la période de temps sélectionnée
+    :param start_date: Date de début
+    :param end_date: Date de fin
+    :return: Figure du graphique mise à jour
+    """
+    if start_date == None and end_date == None:
+        start_date = min_datetime.date()
+        end_date = max_datetime.date()
+    data = get_total_count_article(start_date,end_date)
+    fig_total_article = px.line(data, x='Date', y='Count',
+                             title="Evolution du nombre d'article publiés dans le NY-Times",
+                             color_discrete_sequence=['green'])
+    get_all_data()
+
+    return fig_total_article
+
 @app.callback(
     dash.dependencies.Output('graphique-2', 'figure'),
     [dash.dependencies.Input('mot_recherche', 'value'),
      dash.dependencies.Input('my_date_picker_range_1', 'start_date'),
      dash.dependencies.Input('my_date_picker_range_1', 'end_date')], prevent_initial_call=False)
-# update du choix de catagory
+
 def update_graph2(mot_recherche, start_date, end_date):
+    """
+    Met à jour le graphique 2 en fonction du mot clé choisi et de la période de temps
+    :param start_date: Date de début
+    :param end_date: Date de fin
+    :return: Figure du graphique mise à jour
+    """
     if mot_recherche == None:
         mot_recherche = "France"
     data_article = get_count_filter_article(mot_recherche, start_date, end_date)
@@ -251,7 +319,6 @@ def update_graph2(mot_recherche, start_date, end_date):
     fig_keywords = px.line(data_article, x='Date', y='Count',
                            title='Nombre d\'articles publiés contenant le mot "{}"'.format(mot_recherche))
     get_all_data()
-    total_occurrences = 0
 
     return fig_keywords
 
@@ -261,7 +328,15 @@ def update_graph2(mot_recherche, start_date, end_date):
     [dash.dependencies.Input('dropdown_categories', 'value'),
      dash.dependencies.Input('my_date_picker_range_2', 'start_date'),
      dash.dependencies.Input('my_date_picker_range_2', 'end_date')], prevent_initial_call=False)
+
 def update_graph3(dropdown_categories, start_date, end_date):
+    """
+    Met à jour le graphique 3 en fonction de la catégorie sélectionnée et de la période de temps
+    :param dropdown_categories: Catégorie sélectionnée
+    :param start_date: Date de début
+    :param end_date: Date de fin
+    :return: Figure du graphique mise à jour
+    """
     data_categories = get_categories_count_by_day(dropdown_categories, start_date, end_date)
     display_category(dropdown_categories)
     fig_categories = px.line(data_categories, x='Date', y='Count',
@@ -271,22 +346,10 @@ def update_graph3(dropdown_categories, start_date, end_date):
     return fig_categories
 
 
-@app.callback(
-    dash.dependencies.Output('graphique-1', "figure"),
-    [dash.dependencies.Input('my_date_picker_range_3','start_date'),
-     dash.dependencies.Input('my_date_picker_range_3','end_date')], prevent_initial_call = False)
-def update_graph1(start_date,end_date):
-    if start_date == None and end_date == None:
-        start_date = min_datetime.date()
-        end_date = max_datetime.date()
-    data = get_total_count_article(start_date,end_date)
-    fig_total_article = px.line(data, x='Date', y='Count',
-                             title="Evolution du nombre d'article publiés dans le NY-Times",
-                             color_discrete_sequence=['green'])
-    get_all_data()
-    return fig_total_article
-
 def create_dashboard():
+    """
+    Crée le tableau de bord et lance le serveur Dash
+    """
     app.run_server()
 
 

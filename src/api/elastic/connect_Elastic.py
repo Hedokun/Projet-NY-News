@@ -16,7 +16,8 @@ port = config["route_acces"]["port"]
 
 def connect_elastic_server():
     """
-    Fait la connexion avec le serveur de elasticsearch
+    Fait la connexion avec le serveur Elasticsearch
+    :return: Elasticsearch
     """
     es = Elasticsearch(hosts=f"https://{ip}:{port}",
                        http_auth=("elastic", ELASTIC_PASSWORD))
@@ -25,11 +26,21 @@ def connect_elastic_server():
 
 
 def connect_elastic_docker_server():
+    """
+    Fait la connexion avec le serveur Elasticsearch dans Docker
+    :return: Elasticsearch
+    """
     es = Elasticsearch(hosts=f"https://elastic:datascientest@127.0.0.1:9200", ca_certs="./ressources/ca/ca.crt")
     return es
 
 
 def push_database(elasticsearch, data, tablename):
+    """
+    Ajoute ou met à jour les données dans la base de données Elasticsearch
+    :param elasticsearch: Elasticsearch
+    :param data: données à ajouter ou mettre à jour
+    :param tablename: nom de la table
+    """
     if elasticsearch.indices.exists(index=tablename):
         update_database(elasticsearch, data, tablename)
     else:
