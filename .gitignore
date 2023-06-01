@@ -4,6 +4,10 @@
 /data_brutes/data_books/*.txt
 /resources/config_elastic_connet.json
 /src/api/ressources/ca
-/.iead
+/.idea
 */_pycache_
 /*.pyc
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/Projet-NY-News.iml
+.idea/vcs.xml
