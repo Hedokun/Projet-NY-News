@@ -29,8 +29,23 @@ Il y a la partie front_end dans le dossier front_dash. Ce dossier contient le sc
 
 Il y a la partie Back_end dans le dossier src. Il contient le coeur de l'application c'est à dire l'appel de l'API du New York Times, la création de la Base de données et la valorisation de ces données. Vous retrouverez aussi les notebooks qui nous ont permis de découvrir et explorer les API.
 
-Les requêtes automatisées de L'API du New York Times sont dans le dossier request_NYT. Pour valoriser nos données, nous créerons une base de données NoSQL sur elasticsearch qui offre un système de requêtes performant sur des données textuelles. La connexion à cette base et les différentes requêtes permettant d'alimenter le Dashboard sont dans e dossier elastic. Enfin, le fichier test_App contient les tests de notre application.
+Les requêtes automatisées de L'API du New York Times sont dans le dossier request_NYT. Pour valoriser nos données, nous créerons une base de données NoSQL sur elasticsearch qui offre un système de requêtes performant sur des données textuelles. La connexion à cette base et les différentes requêtes permettant d'alimenter le Dashboard sont dans le dossier elastic. Enfin, le fichier test_App contient les tests de notre application.
 
+Nous conteneurisons cette application grâce à Docker pour une meilleure installation et utilisation puis nous la deployons sur Azure. 
+
+Voici un aperçu des outils utilisés pour ce projet:
+
+![Screenshot de l'archi_app](archi_app.png?raw=true)
+
+Avec la fonction de chaque fichier python selon l'outil:
+
+![Screenshot du diag_app](diag_app.png?raw=true)
+
+Enfin, voici un diagramme résumant l'architecture Docker:
+
+![Screenshot du docker](org_docker.png?raw=true)
+
+Avec dans le diagramme à gauche les images existantes des outils Dash, Python ou encore Elasticsearch et les images spécifiques à notre application (comportant le tag "Custom"). Le diagramme de droite est l'architecture Docker dans l'application. 
 
 ## Installation et Exécution :
 Pour installer et exécuter l'application, vous pouvez suivre les étapes suivantes :
