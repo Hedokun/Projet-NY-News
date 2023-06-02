@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 from datetime import *
 import requests
 
-url_api = "http://127.0.0.1:8000/"
+url_api = "https://fastapinyt.azurewebsites.net/"
 
 def get_all_data():
     """
@@ -332,12 +332,6 @@ def update_graph3(dropdown_categories, start_date, end_date):
     return fig_categories
 
 
-def create_dashboard():
-    """
-    Crée le tableau de bord et lance le serveur Dash
-    """
-    app.run_server()
 
-
-# lancé le Dash 
-create_dashboard()
+if __name__ == '__main__':
+    app.run_server(host="0.0.0.0", debug=False)
