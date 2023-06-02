@@ -55,12 +55,12 @@ jobs:
           docker push fastapicd2.azurecr.io/fastapi-cd:2.0
 
 
-      - name: Deploy to App Service
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'nytdash'
-          images: 'fastapicd2.azurecr.io/fastapi-cd:2.0'
-          slot-name: 'staging'
+            app-name: 'nytdash'
+            images: 'fastapicd2.azurecr.io/fastapi-cd:2.0'
 
 
       - name: Azure logout
