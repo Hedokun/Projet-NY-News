@@ -4,11 +4,11 @@
 Le projet "Projet-NY-News" a été réalisé dans le cadre de la formation Data Engineer de Datascientest par Alexis Peron, Edouard Loiseau et Louis Petat Lenoir. L'objectif de ce projet était d'utiliser les API du journal américain NY Times pour créer notre propre API et apporter une valeur ajoutée aux données disponibles.
 
 Ce projet s'articule autour de pluiseurs étapes pour lesquelles un livrable devra être rendu. Ces étapes sont :
-        * Découverte des sources de données disponible
-        * Organisation des données
-        * Consommation des données
-        * Déploiement
-        * Automatisation des flux
+* Découverte des sources de données disponible
+* Organisation des données
+* Consommation des données
+* Déploiement
+* Automatisation des flux
 
 ## Problématique
 Après avoir exploré les différentes API, nous devons donc répondre à une problématique à l'aide des données récoltées
