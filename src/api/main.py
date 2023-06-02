@@ -1,5 +1,6 @@
 #from elastic.connect_Elastic import connect_elastic_server
 import json
+import uvicorn
 from fastapi import FastAPI
 from elastic.request_elasticsearch import router
 from request_NYT.articles_functions import get_article
@@ -38,6 +39,10 @@ app.include_router(router)
 @app.get("/")
 async def root():
     return {"message":"Bienvenue sur l'API NY-Time-News"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
 
 
 

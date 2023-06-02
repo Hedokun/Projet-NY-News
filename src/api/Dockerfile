@@ -7,10 +7,16 @@ RUN pip3 install -r requirements.txt
 
 WORKDIR /code
 
-COPY src/api /code/app
+#COPY . request_NYT/
+#COPY . elastic/
+#COPY . ressources/
+#COPY . main.py
+
+COPY . /code/app
 
 WORKDIR /code/app
+EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
+CMD ["python3", "main.py"]
 
 
