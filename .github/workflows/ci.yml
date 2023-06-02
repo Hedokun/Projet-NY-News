@@ -49,7 +49,6 @@ jobs:
 
       - name: Build and push container image to registry
         run: |
-          cd ../..
           cd front_dash
           docker build . -t fastapicd2.azurecr.io/fastapi-cd:2.0
           docker push fastapicd2.azurecr.io/fastapi-cd:2.0
