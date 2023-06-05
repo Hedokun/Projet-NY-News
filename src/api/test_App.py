@@ -1,13 +1,13 @@
 import unittest
 import os
 import json
+import aiounittest
+from unittest.mock import patch
 
-#import data_brutes.data_articles
 import elastic.connect_Elastic
 import elastic.request_elasticsearch
 import main
 import request_NYT.articles_functions
-#import front_dash.dashboard
 
 
 class testApp(unittest.TestCase):
@@ -23,7 +23,7 @@ class testApp(unittest.TestCase):
         teste l'appel à l'APi NYT archive
         :return:
         """
-        response = request_NYT.articles_functions.get_api_archive(2023,1)
+        response = request_NYT.articles_functions.get_api_archive(2023, 1)
         self.assertEqual(str(response), "<Response [200]>")
 
 
@@ -32,23 +32,43 @@ class testApp(unittest.TestCase):
         teste la connection à elasticsearch
         :return:
         """
-        self.assertEqual(self.es.ping(),True)
+        self.assertEqual(self.es.ping(), True)
 
-
-    def test_get_root_es(self):
+    @patch('requests.post')
+    def test_post_data_to_database(self, mock_post):
         """
-        teste la requete '*/*' de elasticsearch
+        teste la requete post_data_to_database de elasticsearch
         :return:
         """
-        #self.assertEqual(str(main.root()), "lol")
+        data = {'_index': 'article',
+                '_source': {'Titres': "J'aime les chips",
+                            'doc_type': 'article',
+                            'material_type': 'News',
+                            'abstract': "les pringels paprika sont les meilleurs",
+                            'source': 'The New York Times',
+                            'web_url': 'https://www.nytimes.com/2020/01/31/sports/olympics/toto.html',
+                            'categories': 'Sports',
+                            'lead_paragraph': 'lifetime ban.',
+                            'pub_date': '2020-01-31T23:34:54+0000',
+                            'keywords': ['chips', 'DataScientest']}}
+        #test = elastic.connect_Elastic.push_database(self.es, data, "article")
+        #mock_post.assert_called_with(self.es, data, "article")
 
     def test_get_count_article_es(self):
         """
-        teste la requete get_count_article de elasticsearch
-        obj: verifierr si ça renvoi 2 lists ?
+        teste la requete get_total_count_article de elasticsearch
         :return:
         """
-       # self.assertEqual(True, False)
+        res = elastic.request_elasticsearch.get_total_count_article("2020-01-26", "2020-01-26")
+        self.assertEqual(res["Count"][0], 101)
+
+    def test_get_count_filter_article_es(self):
+        """
+        teste la requete get_count_filter_article de elasticsearch
+        :return:
+        """
+        res = elastic.request_elasticsearch.get_count_filter_article("Biden", "2020-01-26", "2020-01-26")
+        self.assertEqual(res["Count"][0], 1)
 
     def test_get_last_news_es(self):
         """
@@ -70,8 +90,6 @@ class testApp(unittest.TestCase):
         self.assertNotEqual(len(result_request["aggregations"]["max_date"]), 0)
         self.assertNotEqual(len(result_request["aggregations"]["min_date"]), 0)
 
-
-
     def test_get_top10_es(self):
         """
         teste la requete get_top10 de elasticsearch
@@ -80,15 +98,16 @@ class testApp(unittest.TestCase):
         """
         request_top_ten_categories = self.config["get_top_ten_categorie"]
         result_request = self.es.search(index='article', body=request_top_ten_categories,
-                                   filter_path=["aggregations.group_by_categories.buckets"])
+                                        filter_path=["aggregations.group_by_categories.buckets"])
         self.assertNotEqual(len(result_request['aggregations']["group_by_categories"]["buckets"]), 0)
 
-    def test_date_range_picker_es(self):
+    def test_get_categories_count_by_day(self):
         """
-        teste la requete date_range_picker de elasticsearch
+        teste la fonction get_categories_count_by_day de elasticsearch
         :return:
         """
-        self.assertEqual(True, True)
+        res = elastic.request_elasticsearch.get_categories_count_by_day("U.S", "2020-01-26", "2020-01-26")
+        self.assertEqual(res["Count"][0], 40)
 
     def test_get_all_data_dash(self):
         """
@@ -96,8 +115,21 @@ class testApp(unittest.TestCase):
         1) verifie que chaque reponse renvoi qqchose
         :return:
         """
+        #print(front_dash.dashboard.get_all_data()[1])
         #self.assertEqual(front_dash.dashboard.get_all_data()[1], True)
+
+
+class testApp_async(aiounittest.AsyncTestCase):
+    async def test_get_root_es(self):
+        """
+        teste la requete '*/*' de elasticsearch
+        :return:
+        """
+        res = await main.root()
+        self.assertEqual(res, {'message': "Bienvenue sur l'API NY-Time-News"})
+
 
 if __name__ == '__main__':
     unittest.main()
+
 

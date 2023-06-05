@@ -15,11 +15,11 @@ router = APIRouter()
 
 es = connect_elastic_server()
 
-@router.post('/post_data_to_database/', tags=['data'])
-def post_data_to_database(years,month):
-    data = get_article(years,month,"article")
-    push_database(es,data,"article")
 
+@router.post('/post_data_to_database/', tags=['data'])
+def post_data_to_database(years, month):
+    data = get_article(years, month, "article")
+    push_database(es, data, "article")
 
 
 def get_count_article_range(elasticsearch, request):
@@ -32,12 +32,14 @@ def get_count_article_range(elasticsearch, request):
         date.append(i['key_as_string'])
         count.append(i["doc_count"])
     return date, count
-@router.get("/get_total_count_article/",tags=['data'])
-def get_total_count_article(min_date,max_date):
+
+
+@router.get("/get_total_count_article/", tags=['data'])
+def get_total_count_article(min_date, max_date):
     """
     Retourne pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times
     """
-    check_time(min_date,max_date)
+    check_time(min_date, max_date)
     date = []
     count = []
     request = config["get_total_article_count"]
@@ -50,12 +52,12 @@ def get_total_count_article(min_date,max_date):
     d = {'Date': date, 'Count': count}
     return d
 
-@router.get("/get_count_filter_article/",tags=['data'])
+@router.get("/get_count_filter_article/", tags=['data'])
 def get_count_filter_article(param, min_date, max_date):
     """
     Retourne pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times contenant dans son titre le @param
     """
-    check_time(min_date,max_date)
+    check_time(min_date, max_date)
     date = []
     count = []
     request = config["get_count_filter"]
@@ -70,7 +72,7 @@ def get_count_filter_article(param, min_date, max_date):
     return d
 
 
-@router.get("/get_last_news/",tags=['data'])
+@router.get("/get_last_news/", tags=['data'])
 def get_last_news():
     """
     Renvois une liste contenant le titre et l'url des derniers articles insérés dans la base de donnée
@@ -86,7 +88,7 @@ def get_last_news():
     return d
 
 
-@router.get("/get_time_bdd/",tags=['data'])
+@router.get("/get_time_bdd/", tags=['data'])
 def get_time_bdd():
     """
     Récupère la date du plus vieil article et du plus récent article stockés en base
@@ -99,7 +101,7 @@ def get_time_bdd():
     return d
 
 
-@router.get("/get_top_ten_categorie/",tags=['data'])
+@router.get("/get_top_ten_categorie/", tags=['data'])
 def get_top_ten_categorie():
     """
     Renvoi une liste des 10 catégories d'article les plus présentes dans la base de données
@@ -116,12 +118,12 @@ def get_top_ten_categorie():
     return d
 
 
-@router.get("/get_categories_count_by_day/",tags=['data'])
+@router.get("/get_categories_count_by_day/", tags=['data'])
 def get_categories_count_by_day(param, min_date, max_date):
     """
     Retourne pour une catégorie d'article et pour chaque jour d'un interval, le nombre d'articles parus sur le site du Ny-Times
     """
-    check_time(min_date,max_date)
+    check_time(min_date, max_date)
     date = []
     count = []
     requests_get_cat_by_day = config["get_cat_by_day"]
@@ -136,7 +138,7 @@ def get_categories_count_by_day(param, min_date, max_date):
     return d
 
 
-def check_time(dash_min,dash_max):
+def check_time(dash_min, dash_max):
     """
     Récupère la date demandée par l'utilisateur et vérifie si les données sont présentes en base. Si non, requte sur l'API NYT et insère les données demandées dans la base
     """
@@ -149,11 +151,11 @@ def check_time(dash_min,dash_max):
         daterange = pd.date_range(dash_min, bdd_min, freq='M').sort_values(ascending=False)
         for i in daterange[:-1]:
             data = get_article(i.year, i.month, "article")
-            push_database(es, data, "article", False)
+            push_database(es, data, "article")
     elif dash_max > bdd_max :
         daterange = pd.date_range(bdd_max, dash_max, freq='M').sort_values(ascending=False)
         for i in daterange[1:]:
             data = get_article(i.year, i.month, "article")
-            push_database(es, data, "article", False)
+            push_database(es, data, "article")
     else:
         return
